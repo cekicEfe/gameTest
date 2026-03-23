@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
+set(CMAKE_CXX_COMPILER "clang++")
+
 project(CENG C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -21,6 +23,8 @@ target_link_libraries(MAIN_EXEC
   Jolt
 )
 
-target_include_directories(MAIN_EXEC PUBLIC ${CMAKE_CURRENT_LIST_DIR}/src)
+target_include_directories(MAIN_EXEC PUBLIC
+  ${CMAKE_CURRENT_LIST_DIR}/src
+)
 
 

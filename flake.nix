@@ -10,13 +10,16 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
-        jp = pkgs.callPackage ./nix-extras/joltphysics.nix { };
+        # jp = pkgs.callPackage ./nix-extras/joltphysics.nix { };
+        jp = pkgs.callPackage ./nix-extras/buildJolt.nix{ };
       in {
         devShell = pkgs.mkShell {
 
           # Dependencies for project
           buildInputs = [
-            pkgs.gcc
+            # pkgs.gcc
+            pkgs.clang
+            
             pkgs.cmake
             pkgs.valgrind
             pkgs.gf
