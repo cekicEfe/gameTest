@@ -23,6 +23,7 @@
 
             pkgs.stb
             pkgs.raylib
+            pkgs.entt
             jp
           ];
 
@@ -31,6 +32,7 @@
             #
             pkgs.stb
             pkgs.raylib
+            pkgs.entt
             jp
           ];
 
