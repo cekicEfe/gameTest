@@ -10,8 +10,7 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
-        # jp = pkgs.callPackage ./nix-extras/joltphysics.nix { };
-        jp = pkgs.callPackage ./nix-extras/buildJolt.nix{ };
+        jp = pkgs.callPackage ./nix-extras/buildJolt.nix {};
       in {
         devShell = pkgs.mkShell {
 
@@ -19,7 +18,8 @@
           buildInputs = [
             # pkgs.gcc
             pkgs.clang
-            
+
+            pkgs.ninja
             pkgs.cmake
             pkgs.valgrind
             pkgs.gf
@@ -32,7 +32,7 @@
 
           #links libraries to shell
           LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
-            #
+            pkgs.clang
             pkgs.stb
             pkgs.raylib
             pkgs.entt
@@ -41,6 +41,7 @@
 
           shellHook = ''
             PS1="[\\u@\\h && CPP-DEV-ENV:\\w]\$ "
+            export PATH="${pkgs.clang}:$PATH"
           '';
         };
       });

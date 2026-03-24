@@ -13,33 +13,32 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [ cmake ninja clang ];
 
-  cmakeFlags = [
-    "-DCMAKE_BUILD_TYPE=debug"
-    "-DJPH_BUILD_SHARED_LIBRARY=ON"
-    "-DJPH_BUILD_STATIC_LIBRARY=ON"
-    "-DJPH_BUILD_TESTS=ON"
-    "-DJPH_BUILD_SAMPLES=ON"
-
-    "-DCMAKE_CXX_COMPILER=clang++"
-
-    "-DJPH_ENABLE_ASSERTS=ON"
-    "-DJPH_DEBUG_RENDERER=ON"
-    "-DJPH_PROFILE_ENABLED=ON"
-    "-DJPH_OBJECT_STREAM=ON"
-  ];
-
   sourceRoot = "${src.name}/Build";
 
-  # installPhase = ''
-  #   mkdir -p $out/lib
+  configurePhase = ''
+    mkdir Linux_Release
+    cmake -S . -B Linux_Release -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ -DJPH_BUILD_SHARED_LIBRARY=ON -DJPH_BUILD_STATIC_LIBRARY=ON
+  '';
 
-  #   cp -r ${src}/Jolt/ $out/
+  buildPhase = ''
+    cd Linux_Release
+    make -j8
+  '';
 
-  #   find . -name "*.so" -exec cp {} $out/lib/ \;
-  #   find . -name "*.a" -exec cp {} $out/lib/ \;
+  installPhase = ''
+    runHook preInstall
 
-  #   runHook postInstall
-  # '';
+    mkdir -p $out/lib
+    mkdir -p $out/include
+
+    cp -r ${src}/Jolt/ $out/include
+
+    find . -name "*.so" -exec cp {} $out/lib/ \;
+    find . -name "*.a" -exec cp {} $out/lib/ \;
+    cp Linux_Release/JoltConfig.cmake $out/lib 
+
+    runHook postInstall
+  '';
 
   meta = with lib; {
     description = "Jolt Physics rigid body physics engine";
