@@ -10,38 +10,50 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
-        jp = pkgs.callPackage ./nix-extras/buildJolt.nix {};
       in {
         devShell = pkgs.mkShell {
 
           # Dependencies for project
           buildInputs = [
-            # pkgs.gcc
+            pkgs.gcc
             pkgs.clang
 
             pkgs.ninja
             pkgs.cmake
             pkgs.valgrind
             pkgs.gf
+            pkgs.pkg-config
 
             pkgs.stb
             pkgs.raylib
             pkgs.entt
-            jp
+
+            pkgs.glfw
+            pkgs.xorg.libX11
+            pkgs.xorg.libXcursor
+            pkgs.xorg.libXinerama
+            pkgs.xorg.libXrandr
+            pkgs.xorg.libXi
           ];
 
           #links libraries to shell
           LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
-            pkgs.clang
             pkgs.stb
             pkgs.raylib
             pkgs.entt
-            jp
+
+            pkgs.glfw
+            pkgs.xorg.libX11
+            pkgs.xorg.libXcursor
+            pkgs.xorg.libXinerama
+            pkgs.xorg.libXrandr
+            pkgs.xorg.libXi
           ];
 
           shellHook = ''
             PS1="[\\u@\\h && CPP-DEV-ENV:\\w]\$ "
-            export PATH="${pkgs.clang}:$PATH"
+            export CC=${pkgs.clang}
+            export CXX=${pkgs.clang}
           '';
         };
       });
