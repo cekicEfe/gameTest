@@ -20,7 +20,12 @@ add_subdirectory(extern/JoltPhysics/Build/)
 add_executable(${PROJECT_NAME} src/main.cpp)
 
 # Link Jolt and its dependencies
-target_link_libraries(${PROJECT_NAME} PRIVATE Jolt)
+target_link_libraries(${PROJECT_NAME} PUBLIC Jolt raylib)
+
+target_include_directories(${PROJECT_NAME}
+  PUBLIC
+  extern/JoltPhysics/Jolt
+)
 
 # Jolt requires specific defines to work correctly
 # target_compile_definitions(${PROJECT_NAME} PRIVATE

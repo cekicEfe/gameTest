@@ -24,7 +24,6 @@
             pkgs.gf
             pkgs.pkg-config
 
-            pkgs.stb
             pkgs.raylib
             pkgs.entt
 
@@ -38,7 +37,6 @@
 
           #links libraries to shell
           LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
-            pkgs.stb
             pkgs.raylib
             pkgs.entt
 
