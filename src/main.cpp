@@ -1,28 +1,21 @@
 // 1. MUST be included first. This defines all the JPH_ macros,
 // basic types (uint32), and sets up the environment.
-#include <Jolt/Core/Core.h>
 #include <Jolt/Jolt.h>
 
 // 2. These are the standard Jolt headers you need for the setup
-#include <Jolt/RegisterTypes.h>
-
 #include <Jolt/Core/Factory.h>
-
-#include <Jolt/Core/TempAllocator.h>
-
 #include <Jolt/Core/JobSystemThreadPool.h>
-
-#include <Jolt/Physics/PhysicsSystem.h>
-
+#include <Jolt/Core/TempAllocator.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
-
 #include <Jolt/Physics/Collision/Shape/SphereShape.h>
+#include <Jolt/Physics/PhysicsSystem.h>
+#include <Jolt/RegisterTypes.h>
 
 // 3. Other standard headers
 #include <iostream>
 #include <thread>
 
-// SUPER BAD SOLUTION TO THIS YET IT WORKS
+// This is a bad solution
 namespace raylib {
 #include <raylib.h>
 }
@@ -204,9 +197,10 @@ int main() {
 
     raylib::BeginMode3D(camera);
     raylib::DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, raylib::RED);
-    raylib::DrawSphere((raylib::Vector3){position.GetX(), position.GetY(), position.GetZ()},
-                       5.0f, raylib::RED);
-        raylib::DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, raylib::MAROON);
+    raylib::DrawSphere(
+        (raylib::Vector3){position.GetX(), position.GetY(), position.GetZ()},
+        5.0f, raylib::RED);
+    raylib::DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, raylib::MAROON);
     raylib::DrawGrid(10, 1.0f);
     raylib::EndMode3D();
 
