@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(JoltTemplate LANGUAGES CXX)
 
-
 # Force Clang/Ninja users to use modern C++
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -17,7 +16,15 @@ set(TARGET_SAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(extern/JoltPhysics/Build/)
 
 # Our Main Executable
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME}
+  src/main.cpp
+  
+  src/game/game.hpp
+  src/game/game.cpp
+  
+  src/app/app.cpp  
+  src/app/app.hpp
+)
 
 # Link Jolt and its dependencies
 target_link_libraries(${PROJECT_NAME} PUBLIC Jolt raylib)
@@ -25,6 +32,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC Jolt raylib)
 target_include_directories(${PROJECT_NAME}
   PUBLIC
   extern/JoltPhysics/Jolt
+  
+  src/app
+  src/game
 )
 
 # Jolt requires specific defines to work correctly
