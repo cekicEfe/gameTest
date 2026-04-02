@@ -11,11 +11,13 @@
 #include <Jolt/Physics/PhysicsSystem.h>
 #include <Jolt/RegisterTypes.h>
 
+#include <entt/entt.hpp>
+
 #include <iostream>
 #include <thread>
 
 namespace raylib {
-#include raylib
+#include <raylib.h>
 };
 
 using namespace JPH;
@@ -103,6 +105,8 @@ private:
 
   PhysicsSystem physics_system;
 
+  entt::registry registry;
+
 public:
   Game(const uint AllocatorMaxSize = DEFAULT_BUFFER_SIZE,
        const uint cMaxBodies = 1024, const uint cNumBodyMutexes = 0,
@@ -110,6 +114,7 @@ public:
        const uint cMaxContactConstraints = 1024);
   ~Game();
 
+  void init_demo();
   void update(float delta_time);
   void render();
 };

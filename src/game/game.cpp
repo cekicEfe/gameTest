@@ -34,6 +34,11 @@ RlClone::Game::~Game() {
   //
 }
 
+void RlClone::Game::init_demo() {
+  //
+  
+}
+
 void RlClone::Game::update(const float delta_time) {
   this->physics_system.Update(delta_time, 1, &this->temp_allocator,
                               &this->job_system);
