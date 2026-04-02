@@ -2,12 +2,8 @@
 
 RlClone::App::App(const int ScreenWidth, const int ScreenHeight,
                   const std::string WindowTitle)
-    : ScreenWidth(ScreenWidth),
-      ScreenHeight(ScreenHeight)
-     , game(RlClone::Game())
-{
-  this->WindowTitle = WindowTitle;
-}
+    : ScreenWidth(ScreenWidth), ScreenHeight(ScreenHeight),
+      WindowTitle(WindowTitle), game(RlClone::Game()) {}
 
 RlClone::App::~App() {}
 
@@ -22,13 +18,8 @@ void RlClone::App::init() {
 void RlClone::App::main_loop() {
   while (!raylib::WindowShouldClose()) // Detect window close button or ESC key
   {
-    // this->game.update(this->delta_time);
-
-    // Draw
-    //----------------------------------------------------------------------------------
-    raylib::BeginDrawing();
-    raylib::ClearBackground(raylib::RAYWHITE);
-    raylib::EndDrawing();
+    this->game.update(this->delta_time);
+    this->game.render();
   }
 }
 

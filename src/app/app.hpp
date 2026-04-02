@@ -25,7 +25,7 @@ private:
   RlClone::Game game;
 
 public:
-  App(const int ScreenWidth = 1080, const int ScreenHeight = 1920,
+  App(const int ScreenWidth = 1920, const int ScreenHeight = 1080,
       const std::string WindowTitle = std::string("RlClone"));
   ~App();
 

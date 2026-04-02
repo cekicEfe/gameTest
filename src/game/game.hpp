@@ -14,6 +14,10 @@
 #include <iostream>
 #include <thread>
 
+namespace raylib {
+#include raylib
+};
+
 using namespace JPH;
 
 namespace RlClone {
@@ -84,7 +88,16 @@ public:
 #define DEFAULT_BUFFER_SIZE 1024 * 1024 * 10
 
 class Game {
+
 private:
+  class GameContext {
+  public:
+    GameContext();
+    ~GameContext();
+  };
+
+  GameContext game_context;
+
   TempAllocatorImpl temp_allocator; // 10MB buffer
   JobSystemThreadPool job_system;
 
@@ -98,6 +111,7 @@ public:
   ~Game();
 
   void update(float delta_time);
+  void render();
 };
 
 }; // namespace RlClone
