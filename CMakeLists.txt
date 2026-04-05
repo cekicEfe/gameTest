@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 project(JoltTemplate LANGUAGES CXX)
 
 # Force Clang/Ninja users to use modern C++
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -24,10 +24,18 @@ add_executable(${PROJECT_NAME}
   
   src/app/app.cpp  
   src/app/app.hpp
+
+  src/core/render/vulkan_backend.cpp
+  src/core/render/vulkan_backend.hpp
+
+  src/core/render/render.hpp
+  src/core/render/render.cpp
+    
+  src/core/render/backend_interface.hpp
 )
 
 # Link Jolt and its dependencies
-target_link_libraries(${PROJECT_NAME} PUBLIC Jolt raylib)
+target_link_libraries(${PROJECT_NAME} PUBLIC Jolt raylib glfw vulkan)
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC
@@ -35,6 +43,13 @@ target_include_directories(${PROJECT_NAME}
   
   src/app
   src/game
+  src/core/render
+)
+    
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+   USE_VULKAN_BACKEND
+   VULKAN_HPP_DISPATCH_LOADER_DYNAMIC=1
+   VULKAN_HPP_NO_STRUCT_CONSTRUCTORS=1
 )
 
 # Jolt requires specific defines to work correctly
@@ -42,3 +57,4 @@ target_include_directories(${PROJECT_NAME}
 #     JPH_DEBUG_RENDERER
 #     JPH_PROFILE_ENABLED
 # )
+# JPH_DOUBLE_PRECISION use this for big worlds

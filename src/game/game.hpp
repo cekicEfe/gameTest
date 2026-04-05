@@ -6,19 +6,20 @@
 #include <Jolt/Core/Factory.h>
 #include <Jolt/Core/JobSystemThreadPool.h>
 #include <Jolt/Core/TempAllocator.h>
-#include <Jolt/Physics/Body/BodyCreationSettings.h>
-#include <Jolt/Physics/Collision/Shape/SphereShape.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 #include <Jolt/RegisterTypes.h>
 
+// Body and Shape headers
+#include <Jolt/Physics/Body/BodyCreationSettings.h>
+#include <Jolt/Physics/Collision/Shape/BoxShape.h>
+#include <Jolt/Physics/Collision/Shape/SphereShape.h>
+
+// For entity component system
 #include <entt/entt.hpp>
 
+// Other libraries
 #include <iostream>
 #include <thread>
-
-namespace raylib {
-#include <raylib.h>
-};
 
 using namespace JPH;
 
@@ -89,9 +90,22 @@ public:
 
 #define DEFAULT_BUFFER_SIZE 1024 * 1024 * 10
 
+struct Cube {
+  float height;
+  float width;
+  float length;
+};
+
+struct Sphere {
+  float radius;
+};
+
 class Game {
 
 private:
+  // We use game context to initialize the joltphysics before
+  // we initalize the stack allocated job_system, temp_allocator and
+  // physics_system
   class GameContext {
   public:
     GameContext();
@@ -100,6 +114,10 @@ private:
 
   GameContext game_context;
 
+  BPLayerInterfaceImpl broad_phase_layer_interface;
+  ObjectVsBroadPhaseLayerFilterImpl object_vs_broadphase_layer_filter;
+  ObjectLayerPairFilterImpl object_vs_object_layer_filter;
+  
   TempAllocatorImpl temp_allocator; // 10MB buffer
   JobSystemThreadPool job_system;
 
@@ -114,11 +132,11 @@ public:
        const uint cMaxContactConstraints = 1024);
   ~Game();
 
-  void init_demo();
-  void update(float delta_time);
-  void render();
+  void InitDemo();
+  void Update(float delta_time);
+  void Render();
 };
 
-}; // namespace RlClone
+} // namespace RlClone
 
 #endif

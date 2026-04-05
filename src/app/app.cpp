@@ -3,24 +3,28 @@
 RlClone::App::App(const int ScreenWidth, const int ScreenHeight,
                   const std::string WindowTitle)
     : ScreenWidth(ScreenWidth), ScreenHeight(ScreenHeight),
-      WindowTitle(WindowTitle), game(RlClone::Game()) {}
+      WindowTitle(WindowTitle), Game() {}
 
 RlClone::App::~App() {}
 
-void RlClone::App::init() {
-  raylib::InitWindow(this->ScreenWidth, this->ScreenHeight,
-                     this->WindowTitle.data());
-  raylib::DisableCursor();  // Limit cursor to relative movement inside the
-                            // window
-  raylib::SetTargetFPS(60); // Set our game to run at 60 frames-per-second
+void RlClone::App::Init() {
+  this->Renderer.Init();
+  this->Renderer.CreateWindow(ScreenWidth,ScreenHeight,WindowTitle.data());
+  this->Renderer.InitSpecial();
+  this->Game.InitDemo();
 }
 
-void RlClone::App::main_loop() {
-  while (!raylib::WindowShouldClose()) // Detect window close button or ESC key
+void RlClone::App::MainLoop() {
+  while (!this->Renderer.WindowShouldClose()) // Detect window close button or ESC key
   {
-    this->game.update(this->delta_time);
-    this->game.render();
+    this->Renderer.PollEvents();
+    this->Game.Update(this->DeltaTime);
+    this->Game.Render();
   }
 }
 
-void RlClone::App::finish() { raylib::CloseWindow(); }
+void RlClone::App::Finish() {
+  //
+  this->Renderer.CloseWindow();
+  this->Renderer.CleanUp();
+}

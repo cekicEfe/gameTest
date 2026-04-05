@@ -3,13 +3,7 @@
 
 #include <game.hpp>
 #include <string>
-// The reason why we import raylib like this is that
-// there is a import problem between jolt and raylib
-// where COLORS are ambgious
-// like WHITE RED BLACK
-namespace raylib {
-#include <raylib.h>
-}
+#include <render.hpp>
 
 namespace RlClone {
 
@@ -21,19 +15,20 @@ private:
   const int ScreenHeight;
   std::string WindowTitle;
 
-  const float delta_time = 1.0f / 60.0f;
-  RlClone::Game game;
-
+  const float DeltaTime = 1.0f / 60.0f;
+  RlClone::Game Game;
+  core::Renderer Renderer;
+  
 public:
   App(const int ScreenWidth = 1920, const int ScreenHeight = 1080,
       const std::string WindowTitle = std::string("RlClone"));
   ~App();
 
-  void init();
-  void main_loop();
-  void finish();
+  void Init();
+  void MainLoop();
+  void Finish();
 };
 
-}; // namespace RlClone
+} // namespace RlClone
 
 #endif

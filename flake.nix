@@ -8,8 +8,7 @@
 
   outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = import nixpkgs { inherit system; };
+      let pkgs = import nixpkgs { inherit system; };
       in {
         devShell = pkgs.mkShell {
 
@@ -24,10 +23,17 @@
             pkgs.gf
             pkgs.pkg-config
 
+            pkgs.vulkan-loader
+            pkgs.vulkan-tools
+            pkgs.vulkan-validation-layers
+            pkgs.directx-shader-compiler
+
             pkgs.raylib
             pkgs.entt
-
+            pkgs.glm
             pkgs.glfw
+            pkgs.vulkan-headers
+            pkgs.vulkan-utility-libraries
             pkgs.xorg.libX11
             pkgs.xorg.libXcursor
             pkgs.xorg.libXinerama
@@ -39,8 +45,10 @@
           LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
             pkgs.raylib
             pkgs.entt
-
+            pkgs.glm
             pkgs.glfw
+            pkgs.vulkan-headers
+            pkgs.vulkan-utility-libraries
             pkgs.xorg.libX11
             pkgs.xorg.libXcursor
             pkgs.xorg.libXinerama
@@ -48,8 +56,11 @@
             pkgs.xorg.libXi
           ];
 
+          VULKAN_SDK = "${pkgs.vulkan-headers}";
+          VK_LAYER_PATH =
+            "${pkgs.vulkan-validation-layers}/share/vulkan/explicit_layer.d";
+
           shellHook = ''
-            PS1="[\\u@\\h && CPP-DEV-ENV:\\w]\$ "
             export CC=${pkgs.clang}
             export CXX=${pkgs.clang}
           '';
