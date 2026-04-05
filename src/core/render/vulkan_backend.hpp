@@ -32,6 +32,7 @@ private:
   void SetupDebugMessenger();
   void PickPhysicalDevice();
   void CreateLogicalDevice();
+  void CreateSurface();
   std::vector<const char *> getRequiredInstanceExtensions();
   static VKAPI_ATTR vk::Bool32 VKAPI_CALL debugCallback(
       vk::DebugUtilsMessageSeverityFlagBitsEXT severity,
@@ -51,13 +52,13 @@ public:
 
 private:
   GLFWwindow *MainWindow;
+  
   vk::raii::Context context;
   vk::raii::Instance instance = nullptr;
   vk::raii::DebugUtilsMessengerEXT debugMessenger = nullptr;
-
+	vk::raii::SurfaceKHR             surface        = nullptr;
   vk::raii::PhysicalDevice physicalDevice = nullptr;
   vk::raii::Device device = nullptr;
-
   vk::raii::Queue graphicsQueue = nullptr;
 
   std::vector<const char *> requiredDeviceExtension = {
