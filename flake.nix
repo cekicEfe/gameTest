@@ -1,69 +1,57 @@
 {
-  description = "Cpp development environment";
+  description = "RevEngine";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    systems.url = "github:nix-systems/default";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let pkgs = import nixpkgs { inherit system; };
-      in {
-        devShell = pkgs.mkShell {
+  outputs = {
+    self,
+    nixpkgs,
+    systems,
+    ...
+  }: let
+    forEachSystem = f:
+      nixpkgs.lib.genAttrs (import systems) (system:
+        f {
+          pkgs = import nixpkgs {
+            inherit system;
+          };
+        });
+  in {
+    formatter = forEachSystem ({pkgs, ...}: pkgs.alejandra);
 
-          # Dependencies for project
-          buildInputs = [
-            pkgs.gcc
-            pkgs.clang
+    devShells = forEachSystem ({pkgs, ...}: {
+      default = pkgs.mkShell {
+        packages = with pkgs; [
+          libllvm
+          cmake
+          gtest
+        ];
+      };
+    });
 
-            pkgs.ninja
-            pkgs.cmake
-            pkgs.valgrind
-            pkgs.gf
-            pkgs.pkg-config
+    packages = forEachSystem ({pkgs, ...}: {
+      default = pkgs.stdenv.mkDerivation {
+        pname = "RevEngine";
+        version = "0.1.0";
+        src = ./.;
 
-            pkgs.vulkan-loader
-            pkgs.vulkan-tools
-            pkgs.vulkan-validation-layers
-            pkgs.directx-shader-compiler
+        nativeBuildInputs = with pkgs; [
+          cmake
+        ];
+        buildInputs = with pkgs; [
+          # gtest
+        ];
+      };
+    });
 
-            pkgs.raylib
-            pkgs.entt
-            pkgs.glm
-            pkgs.glfw
-            pkgs.vulkan-headers
-            pkgs.vulkan-utility-libraries
-            pkgs.xorg.libX11
-            pkgs.xorg.libXcursor
-            pkgs.xorg.libXinerama
-            pkgs.xorg.libXrandr
-            pkgs.xorg.libXi
-          ];
-
-          #links libraries to shell
-          LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
-            pkgs.raylib
-            pkgs.entt
-            pkgs.glm
-            pkgs.glfw
-            pkgs.vulkan-headers
-            pkgs.vulkan-utility-libraries
-            pkgs.xorg.libX11
-            pkgs.xorg.libXcursor
-            pkgs.xorg.libXinerama
-            pkgs.xorg.libXrandr
-            pkgs.xorg.libXi
-          ];
-
-          VULKAN_SDK = "${pkgs.vulkan-headers}";
-          VK_LAYER_PATH =
-            "${pkgs.vulkan-validation-layers}/share/vulkan/explicit_layer.d";
-
-          shellHook = ''
-            export CC=${pkgs.clang}
-            export CXX=${pkgs.clang}
-          '';
-        };
-      });
+    apps = forEachSystem ({pkgs, ...}: {
+      default = {
+        type = "app";
+        program = "${self.packages.${pkgs.system}.default}/bin/RevEngine";
+      };
+    });
+  };
 }
