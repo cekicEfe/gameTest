@@ -12,16 +12,47 @@
         nixpkgs.lib.genAttrs (import systems)
         (system: f { pkgs = import nixpkgs { inherit system; }; });
 
-      #      JOLT_REPO = 
-
     in {
 
       formatter = forEachSystem ({ pkgs, ... }: pkgs.alejandra);
 
-      devShells = forEachSystem ({ pkgs, ... }: {
-        default =
-          pkgs.mkShell { packages = with pkgs; [ libllvm cmake gtest ]; };
-      });
+      devShells = forEachSystem ({ pkgs, ... }:
+        let
+          JOLT_REPO = pkgs.fetchgit {
+            url = "https://github.com/jrouwe/JoltPhysics";
+            tag = "v5.5.0";
+            hash = "sha256-OQ3kqpd0NBKA0e/YRNCKaSR0wKIto1mcZ+X93CuJ+Dc=";
+          };
+        in {
+          default = pkgs.mkShell {
+
+            JOLT_REPO = JOLT_REPO;
+            
+            packages = with pkgs; [
+              cmake
+              ninja
+              clang
+              valgrind
+              
+              pkg-config
+              vulkan-loader
+              vulkan-tools
+              vulkan-validation-layers
+              directx-shader-compiler
+              raylib
+              entt
+              glm
+              glfw
+              vulkan-headers
+              vulkan-utility-libraries
+              xorg.libX11
+              xorg.libXcursor
+              xorg.libXinerama
+              xorg.libXrandr
+              xorg.libXi
+            ];
+          };
+        });
 
       packages = forEachSystem ({ pkgs }:
         let
