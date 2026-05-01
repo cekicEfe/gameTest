@@ -2,66 +2,36 @@
 #define APP_HPP
 
 
-
 #include <game.hpp>
 #include <string>
-//#include <render.hpp>
+// #include <render.hpp>
 
+
+namespace raylib {
+#include <raylib.h>
+};
 
 
 namespace RlClone {
 
 
-  
 class App {
 private:
-  int ScreenWidth;
+    uint ScreenWidth;
+    uint ScreenHeight;
+    std::string WindowTitle;
 
-
-
-  int ScreenHeight;
-
-
-
-  std::string WindowTitle;
-
-
-  
-  const float DeltaTime = 1.0f / 60.0f;
-
-
-
-  RlClone::Game Game;
-
-
-
-  //core::Renderer Renderer;
-
-
-  
+    RlClone::Game Game;
+    // core::Renderer Renderer;
 public:
-  App(const int ScreenWidth = 1920, const int ScreenHeight = 1080,
-      const std::string WindowTitle = std::string("RlClone"));
+    App(const uint ScreenWidth = 1920,
+        const uint ScreenHeight = 1080,
+        const std::string WindowTitle = std::string("RlClone"));
+    ~App();
 
-
-
-  ~App();
-
-
-  
-  void Init();
-
-
-
-  void Run();
-
-
-
-  void Finish();
-
-
-  
+    void Run();
 };
+
 
 } // namespace RlClone
 

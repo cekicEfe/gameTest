@@ -2,7 +2,6 @@
 #define GAME_HPP
 
 
-
 // The Jolt headers don't include Jolt.h. Always include Jolt.h before including
 // any other Jolt header. You can use Jolt.h in your precompiled header to speed
 // up compilation.
@@ -29,6 +28,10 @@
 #include <entt/entt.hpp>
 
 
+namespace raylib {
+#include <raylib.h>
+};
+
 
 // Disable common warnings triggered by Jolt, you can use
 // JPH_SUPPRESS_WARNING_PUSH / JPH_SUPPRESS_WARNING_POP to store and restore the
@@ -50,17 +53,15 @@ using namespace std;
 //
 //
 namespace RlClone {
-  
-extern void TraceImpl(const char *inFMT, ...);
-  
+
+extern void TraceImpl(const char* inFMT, ...);
+
 #ifdef JPH_ENABLE_ASSERTS
 // Callback for asserts, connect this to your own assert handler if you have one
-extern bool AssertFailedImpl(const char *inExpression, const char *inMessage,
-                             const char *inFile, uint inLine);
+extern bool AssertFailedImpl(const char* inExpression, const char* inMessage, const char* inFile, uint inLine);
 #endif // JPH_ENABLE_ASSERTS
 
 
-  
 // Layer that objects can be in, determines which other objects it can collide
 // with Typically you at least want to have 1 layer for moving bodies and 1
 // layer for static bodies, but you can have more layers if you want. E.g. you
@@ -73,16 +74,13 @@ static constexpr ObjectLayer NUM_LAYERS = 2;
 }; // namespace Layers
 
 
-  
 /// Class that determines if two object layers can collide
 class ObjectLayerPairFilterImpl : public ObjectLayerPairFilter {
 public:
-  virtual bool ShouldCollide(ObjectLayer inObject1,
-                             ObjectLayer inObject2) const override ;
+    virtual bool ShouldCollide(ObjectLayer inObject1, ObjectLayer inObject2) const override;
 };
 
-  
-  
+
 // Each broadphase layer results in a separate bounding volume tree in the broad
 // phase. You at least want to have a layer for non-moving and moving objects to
 // avoid having to update a tree full of static objects every frame. You can
@@ -98,106 +96,110 @@ static constexpr uint NUM_LAYERS(2);
 }; // namespace BroadPhaseLayers
 
 
-  
 // BroadPhaseLayerInterface implementation
 // This defines a mapping between object and broadphase layers.
 class BPLayerInterfaceImpl final : public BroadPhaseLayerInterface {
 public:
-  BPLayerInterfaceImpl();
+    BPLayerInterfaceImpl();
 
-  virtual uint GetNumBroadPhaseLayers() const override;
+    virtual uint GetNumBroadPhaseLayers() const override;
 
-  virtual BroadPhaseLayer
-  GetBroadPhaseLayer(ObjectLayer inLayer) const override;
-  
+    virtual BroadPhaseLayer GetBroadPhaseLayer(ObjectLayer inLayer) const override;
+
 #if defined(JPH_EXTERNAL_PROFILE) || defined(JPH_PROFILE_ENABLED)
-  virtual const char *
-  GetBroadPhaseLayerName(BroadPhaseLayer inLayer) const override;
+    virtual const char* GetBroadPhaseLayerName(BroadPhaseLayer inLayer) const override;
 #endif // JPH_EXTERNAL_PROFILE || JPH_PROFILE_ENABLED
-  
 private:
-  BroadPhaseLayer mObjectToBroadPhase[Layers::NUM_LAYERS];
+    BroadPhaseLayer mObjectToBroadPhase[Layers::NUM_LAYERS];
 };
 
 
-  
 /// Class that determines if an object layer can collide with a broadphase layer
 class ObjectVsBroadPhaseLayerFilterImpl : public ObjectVsBroadPhaseLayerFilter {
 public:
-  virtual bool ShouldCollide(ObjectLayer inLayer1,
-                             BroadPhaseLayer inLayer2) const override;
+    virtual bool ShouldCollide(ObjectLayer inLayer1, BroadPhaseLayer inLayer2) const override;
 };
 
 
-  
 // An example contact listener
 class MyContactListener : public ContactListener {
 public:
-  // See: ContactListener
-  virtual ValidateResult
-  OnContactValidate(const Body &inBody1, const Body &inBody2,
-                    RVec3Arg inBaseOffset,
-                    const CollideShapeResult &inCollisionResult) override;
-  virtual void OnContactAdded(const Body &inBody1, const Body &inBody2,
-                              const ContactManifold &inManifold,
-                              ContactSettings &ioSettings) override;
-  virtual void OnContactPersisted(const Body &inBody1, const Body &inBody2,
-                                  const ContactManifold &inManifold,
-                                  ContactSettings &ioSettings) override;
-  virtual void OnContactRemoved(const SubShapeIDPair &inSubShapePair) override;
+    // See: ContactListener
+    virtual ValidateResult OnContactValidate(
+        const Body& inBody1,
+        const Body& inBody2,
+        RVec3Arg inBaseOffset,
+        const CollideShapeResult& inCollisionResult) override;
+    virtual void OnContactAdded(
+        const Body& inBody1,
+        const Body& inBody2,
+        const ContactManifold& inManifold,
+        ContactSettings& ioSettings) override;
+    virtual void OnContactPersisted(
+        const Body& inBody1,
+        const Body& inBody2,
+        const ContactManifold& inManifold,
+        ContactSettings& ioSettings) override;
+    virtual void OnContactRemoved(const SubShapeIDPair& inSubShapePair) override;
 };
 
 
-  
 // An example activation listener
 class MyBodyActivationListener : public BodyActivationListener {
 public:
-  virtual void OnBodyActivated(const BodyID &inBodyID,
-                               uint64 inBodyUserData) override;
-  virtual void OnBodyDeactivated(const BodyID &inBodyID,
-                                 uint64 inBodyUserData) override;
+    virtual void OnBodyActivated(const BodyID& inBodyID, uint64 inBodyUserData) override;
+    virtual void OnBodyDeactivated(const BodyID& inBodyID, uint64 inBodyUserData) override;
 };
 
 
-  
 class Game {
 private:
-  // We use GameContext to initialize the Jolt before
-  // we initalize the stack allocated job_system, temp_allocator and
-  // physics_system
-  class GameContext {
-  public:
-    GameContext();
-    ~GameContext();
-  };
- 
-  GameContext game_context;
+    // We use GameContext to initialize the JoltPhysics before
+    // we initalize the stack allocated job_system, temp_allocator and
+    // physics_system
+    class GameContext {
+    public:
+        GameContext();
+        ~GameContext();
+    };
 
-  BPLayerInterfaceImpl broad_phase_layer_interface;
-  ObjectVsBroadPhaseLayerFilterImpl object_vs_broadphase_layer_filter;
-  ObjectLayerPairFilterImpl object_vs_object_layer_filter;
+    static constexpr float delta_time = 1 / 60;
 
-  TempAllocatorImpl temp_allocator; // 10MB buffer
-  JobSystemThreadPool job_system;
-  PhysicsSystem physics_system;
+    GameContext game_context;
 
-  entt::registry registry;
- 
-public:
-  Game(const uint AllocatorMaxSize = (1024 * 1024 * 10),
-       const uint cMaxBodies = 1024, const uint cNumBodyMutexes = 0,
-       const uint cMaxBodyPairs = 1024,
-       const uint cMaxContactConstraints = 1024);
-  ~Game();
+    BPLayerInterfaceImpl broad_phase_layer_interface;
+    ObjectVsBroadPhaseLayerFilterImpl object_vs_broadphase_layer_filter;
+    ObjectLayerPairFilterImpl object_vs_object_layer_filter;
+
+    TempAllocatorImpl temp_allocator; // 10MB buffer
+    JobSystemThreadPool job_system;
+
+    PhysicsSystem physics_system;
+    
+    entt::registry registry;
   
-  void InitDemo();
-  void Update(float delta_time);
-  void Render();
-  void CleanupDemo();
+public:
+    Game(
+        const uint AllocatorMaxSize = (1024 * 1024 * 10),
+        const uint cMaxBodies = 1024,
+        const uint cNumBodyMutexes = 0,
+        const uint cMaxBodyPairs = 1024,
+        const uint cMaxContactConstraints = 1024);
+    ~Game();
+
+    void Init();
+    void Cleanup();
+
+    void MainLoop();
+    bool ShouldGameStop();
+    void Update();
+    void Render();
+
+    void InitDemo();
+    void CleanupDemo();
 };
 
 
-  
 } // namespace RlClone
 
 #endif

@@ -1,12 +1,16 @@
 #include <app.hpp>
 
-int main(int argc, char **argv) {
+#include <exception> // For exceptions
+#include <iostream> // For cout and endl
 
-  RlClone::App app;
-  app.Init();
-  app.Run();
-  app.Finish();
-  
-  
-  return 0;
+int main(int argc, char** argv) {
+    RlClone::App app;
+
+    try {
+        app.Run();
+    } catch (std::exception& e) {
+        std::cout << e.what() << std::endl;
+    }
+
+    return 0;
 }

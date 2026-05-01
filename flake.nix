@@ -26,6 +26,9 @@
         in {
           default = pkgs.mkShell {
 
+            C_COMPILER = "${pkgs.gcc}/bin/gcc";
+            CXX_COMPILER = "${pkgs.gcc}/bin/g++";
+            
             JOLT_REPO = JOLT_REPO;
             
             packages = with pkgs; [
@@ -33,6 +36,7 @@
               ninja
               clang
               valgrind
+              gcc
               
               pkg-config
               vulkan-loader
@@ -51,6 +55,26 @@
               xorg.libXrandr
               xorg.libXi
             ];
+
+            LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
+              pkgs.pkg-config
+              pkgs.vulkan-loader
+              pkgs.vulkan-tools
+              pkgs.vulkan-validation-layers
+              pkgs.directx-shader-compiler
+              pkgs.raylib
+              pkgs.entt
+              pkgs.glm
+              pkgs.glfw
+              pkgs.vulkan-headers
+              pkgs.vulkan-utility-libraries
+              pkgs.xorg.libX11
+              pkgs.xorg.libXcursor
+              pkgs.xorg.libXinerama
+              pkgs.xorg.libXrandr
+              pkgs.xorg.libXi
+            ];
+            
           };
         });
 
@@ -67,16 +91,17 @@
             version = "0.1.0";
             src = ./.;
 
+            CC = pkgs.clang;
             JOLT_REPO = JOLT_REPO;
-
-            nativeBuildInputs = with pkgs; [ cmake ninja clang ];
+            
+            nativeBuildInputs = with pkgs; [ cmake ninja clang gcc];
             buildInputs = with pkgs; [
               pkgs.pkg-config
               pkgs.vulkan-loader
               pkgs.vulkan-tools
               pkgs.vulkan-validation-layers
               pkgs.directx-shader-compiler
-
+              
               pkgs.raylib
               pkgs.entt
               pkgs.glm
