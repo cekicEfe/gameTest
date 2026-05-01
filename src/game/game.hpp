@@ -2,30 +2,19 @@
 #define GAME_HPP
 
 
-// The Jolt headers don't include Jolt.h. Always include Jolt.h before including
-// any other Jolt header. You can use Jolt.h in your precompiled header to speed
-// up compilation.
-#include <Jolt/Jolt.h>
-
-// Jolt includes
-#include <Jolt/Core/Factory.h>
-#include <Jolt/Core/JobSystemThreadPool.h>
-#include <Jolt/Core/TempAllocator.h>
-#include <Jolt/Physics/Body/BodyActivationListener.h>
-#include <Jolt/Physics/Body/BodyCreationSettings.h>
-#include <Jolt/Physics/Collision/Shape/BoxShape.h>
-#include <Jolt/Physics/Collision/Shape/SphereShape.h>
-#include <Jolt/Physics/PhysicsSettings.h>
-#include <Jolt/Physics/PhysicsSystem.h>
-#include <Jolt/RegisterTypes.h>
-
 // STL includes
-#include <cstdarg>
 #include <iostream>
 #include <thread>
 
+
+// The physics backend
+#include <game/game_physics_backend.hpp>
+
+
 // For entity component system
 #include <entt/entt.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 
 namespace raylib {
@@ -33,151 +22,95 @@ namespace raylib {
 };
 
 
-// Disable common warnings triggered by Jolt, you can use
-// JPH_SUPPRESS_WARNING_PUSH / JPH_SUPPRESS_WARNING_POP to store and restore the
-// warning state
-JPH_SUPPRESS_WARNINGS
-
 // All Jolt symbols are in the JPH namespace
 using namespace JPH;
+
 
 // If you want your code to compile using single or double precision write 0.0_r
 // to get a Real value that compiles to double or float depending if
 // JPH_DOUBLE_PRECISION is set or not.
 using namespace JPH::literals;
 
-// We're also using STL classes in this example
-using namespace std;
 
-//
-//
-//
 namespace RlClone {
 
-extern void TraceImpl(const char* inFMT, ...);
 
-#ifdef JPH_ENABLE_ASSERTS
-// Callback for asserts, connect this to your own assert handler if you have one
-extern bool AssertFailedImpl(const char* inExpression, const char* inMessage, const char* inFile, uint inLine);
-#endif // JPH_ENABLE_ASSERTS
-
-
-// Layer that objects can be in, determines which other objects it can collide
-// with Typically you at least want to have 1 layer for moving bodies and 1
-// layer for static bodies, but you can have more layers if you want. E.g. you
-// could have a layer for high detail collision (which is not used by the
-// physics simulation but only if you do collision testing).
-namespace Layers {
-static constexpr ObjectLayer NON_MOVING = 0;
-static constexpr ObjectLayer MOVING = 1;
-static constexpr ObjectLayer NUM_LAYERS = 2;
-}; // namespace Layers
-
-
-/// Class that determines if two object layers can collide
-class ObjectLayerPairFilterImpl : public ObjectLayerPairFilter {
+class TestFloorFactory {
 public:
-    virtual bool ShouldCollide(ObjectLayer inObject1, ObjectLayer inObject2) const override;
+    static void CreateTestFloor(entt::registry& registry, BodyInterface& body_interface) {
+        // Next we can create a rigid body to serve as the floor, we make a large box
+        // Create the settings for the collision volume (the shape).
+        // Note that for simple shapes (like boxes) you can also directly construct a BoxShape.
+        BoxShapeSettings floor_shape_settings(Vec3(100.0f, 1.0f, 100.0f));
+        floor_shape_settings
+            .SetEmbedded(); // A ref counted object on the stack (base class RefTarget) should be marked as
+                            // such to prevent it from being freed when its reference count goes to 0.
+
+
+        // Create the shape
+        ShapeSettings::ShapeResult floor_shape_result = floor_shape_settings.Create();
+        ShapeRefC floor_shape =
+            floor_shape_result
+                .Get(); // We don't expect an error here, but you can check floor_shape_result for HasError() / GetError()
+
+
+        // Create the settings for the body itself. Note that here you can also set other properties like the restitution / friction.
+        BodyCreationSettings floor_settings(
+            floor_shape,
+            RVec3(0.0_r, -1.0_r, 0.0_r),
+            Quat::sIdentity(),
+            EMotionType::Static,
+            PhysicsBackend::Layers::NON_MOVING);
+
+
+        // Create the actual rigid body
+        Body* floor =
+            body_interface.CreateBody(floor_settings); // Note that if we run out of bodies this can return nullptr
+
+
+        // Add it to the world
+        body_interface.AddBody(floor->GetID(), EActivation::DontActivate);
+
+        
+        auto floor_entity = registry.create();
+
+        
+        registry.emplace<BodyID>(floor_entity, floor->GetID());
+        
+        
+    }
+  
+    static void DestroyTestFloor(entt::registry& registry, BodyInterface& body_interface, entt::entity entity) {
+
+
+      BodyID floorID = registry.get<BodyID>(entity);
+
+      
+      body_interface.RemoveBody( floorID());
+      body_interface.DestroyBody(floorID());
+
+      
+      registry.destroy(entity);
+
+      
+    }
+  
+    static void RenderTestFloor(entt::registry& registry, BodyInterface& body_interface, entt::entt entity) {
+
+      
+      BodyID floorID = registry.get<BodyID>(entity);
+      RVec3 pos = body_interface.GetPosition (floorID);
+      
+      
+    }
 };
 
-
-// Each broadphase layer results in a separate bounding volume tree in the broad
-// phase. You at least want to have a layer for non-moving and moving objects to
-// avoid having to update a tree full of static objects every frame. You can
-// have a 1-on-1 mapping between object layers and broadphase layers (like in
-// this case) but if you have many object layers you'll be creating many broad
-// phase trees, which is not efficient. If you want to fine tune your broadphase
-// layers define JPH_TRACK_BROADPHASE_STATS and look at the stats reported on
-// the TTY.
-namespace BroadPhaseLayers {
-static constexpr BroadPhaseLayer NON_MOVING(0);
-static constexpr BroadPhaseLayer MOVING(1);
-static constexpr uint NUM_LAYERS(2);
-}; // namespace BroadPhaseLayers
-
-
-// BroadPhaseLayerInterface implementation
-// This defines a mapping between object and broadphase layers.
-class BPLayerInterfaceImpl final : public BroadPhaseLayerInterface {
-public:
-    BPLayerInterfaceImpl();
-
-    virtual uint GetNumBroadPhaseLayers() const override;
-
-    virtual BroadPhaseLayer GetBroadPhaseLayer(ObjectLayer inLayer) const override;
-
-#if defined(JPH_EXTERNAL_PROFILE) || defined(JPH_PROFILE_ENABLED)
-    virtual const char* GetBroadPhaseLayerName(BroadPhaseLayer inLayer) const override;
-#endif // JPH_EXTERNAL_PROFILE || JPH_PROFILE_ENABLED
-private:
-    BroadPhaseLayer mObjectToBroadPhase[Layers::NUM_LAYERS];
-};
-
-
-/// Class that determines if an object layer can collide with a broadphase layer
-class ObjectVsBroadPhaseLayerFilterImpl : public ObjectVsBroadPhaseLayerFilter {
-public:
-    virtual bool ShouldCollide(ObjectLayer inLayer1, BroadPhaseLayer inLayer2) const override;
-};
-
-
-// An example contact listener
-class MyContactListener : public ContactListener {
-public:
-    // See: ContactListener
-    virtual ValidateResult OnContactValidate(
-        const Body& inBody1,
-        const Body& inBody2,
-        RVec3Arg inBaseOffset,
-        const CollideShapeResult& inCollisionResult) override;
-    virtual void OnContactAdded(
-        const Body& inBody1,
-        const Body& inBody2,
-        const ContactManifold& inManifold,
-        ContactSettings& ioSettings) override;
-    virtual void OnContactPersisted(
-        const Body& inBody1,
-        const Body& inBody2,
-        const ContactManifold& inManifold,
-        ContactSettings& ioSettings) override;
-    virtual void OnContactRemoved(const SubShapeIDPair& inSubShapePair) override;
-};
-
-
-// An example activation listener
-class MyBodyActivationListener : public BodyActivationListener {
-public:
-    virtual void OnBodyActivated(const BodyID& inBodyID, uint64 inBodyUserData) override;
-    virtual void OnBodyDeactivated(const BodyID& inBodyID, uint64 inBodyUserData) override;
-};
-
-
+  
 class Game {
 private:
-    // We use GameContext to initialize the JoltPhysics before
-    // we initalize the stack allocated job_system, temp_allocator and
-    // physics_system
-    class GameContext {
-    public:
-        GameContext();
-        ~GameContext();
-    };
+    entt::registry entity_registry;
+    PhysicsBackend::GamePhysicsBackend game_physics_backend;
 
-    static constexpr float delta_time = 1 / 60;
-
-    GameContext game_context;
-
-    BPLayerInterfaceImpl broad_phase_layer_interface;
-    ObjectVsBroadPhaseLayerFilterImpl object_vs_broadphase_layer_filter;
-    ObjectLayerPairFilterImpl object_vs_object_layer_filter;
-
-    TempAllocatorImpl temp_allocator; // 10MB buffer
-    JobSystemThreadPool job_system;
-
-    PhysicsSystem physics_system;
-    
-    entt::registry registry;
-  
 public:
     Game(
         const uint AllocatorMaxSize = (1024 * 1024 * 10),
