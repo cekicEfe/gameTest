@@ -23,6 +23,7 @@
             tag = "v5.5.0";
             hash = "sha256-OQ3kqpd0NBKA0e/YRNCKaSR0wKIto1mcZ+X93CuJ+Dc=";
           };
+          
         in {
           default = pkgs.mkShell {
 
@@ -32,6 +33,7 @@
             JOLT_REPO = JOLT_REPO;
             
             packages = with pkgs; [
+              gdb
               cmake
               ninja
               clang
@@ -85,13 +87,16 @@
             tag = "v5.5.0";
             hash = "sha256-OQ3kqpd0NBKA0e/YRNCKaSR0wKIto1mcZ+X93CuJ+Dc=";
           };
+          
         in {
           default = pkgs.stdenv.mkDerivation {
             pname = "RevEngine";
             version = "0.1.0";
             src = ./.;
 
-            CC = pkgs.clang;
+            C_COMPILER = "${pkgs.gcc}/bin/gcc";
+            CXX_COMPILER = "${pkgs.gcc}/bin/g++";
+            
             JOLT_REPO = JOLT_REPO;
             
             nativeBuildInputs = with pkgs; [ cmake ninja clang gcc];

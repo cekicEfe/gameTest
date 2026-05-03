@@ -1,14 +1,20 @@
 cmake_minimum_required(VERSION 3.20)
 
 project(RevEngine)
-
+    
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
         
 add_subdirectory(src)
-add_subdirectory($ENV{JOLT_REPO}/Build/ include/)
+add_subdirectory($ENV{JOLT_REPO}/Build/ include/Jolt)
+    
+target_compile_options(Jolt PRIVATE
+    -Wno-array-bounds
+)
 
+configure_file(fonts/alagard.ttf src/ COPYONLY)    
+        
 target_include_directories (
     RevEngine
     PUBLIC
@@ -25,5 +31,5 @@ target_compile_definitions(RevEngine PRIVATE
    VULKAN_HPP_DISPATCH_LOADER_DYNAMIC=1
    VULKAN_HPP_NO_STRUCT_CONSTRUCTORS=1
 )
-                
+    
 install(TARGETS RevEngine DESTINATION bin)

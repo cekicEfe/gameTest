@@ -154,6 +154,7 @@ public:
     virtual void OnBodyDeactivated(const BodyID& inBodyID, uint64 inBodyUserData) override;
 };
 
+struct GamePhysicsBackendConfig {};
 
 class GamePhysicsBackend {
 private:
@@ -180,6 +181,7 @@ public:
         const uint cNumBodyMutexes = 0,
         const uint cMaxBodyPairs = 1024,
         const uint cMaxContactConstraints = 1024);
+    GamePhysicsBackend(GamePhysicsBackendConfig config);
     ~GamePhysicsBackend();
 
     static constexpr float delta_time = 1 / 60;

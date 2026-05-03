@@ -22,7 +22,8 @@ bool RlClone::PhysicsBackend::AssertFailedImpl(
     const char* inFile,
     uint inLine) {
     // Print to the TTY
-    cout << inFile << ":" << inLine << ": (" << inExpression << ") " << (inMessage != nullptr ? inMessage : "") << endl;
+    cout << inFile << ":" << inLine << ": (" << inExpression << ") "
+         << (inMessage != nullptr ? inMessage : "") << endl;
 
     // Breakpoint
     return true;
@@ -30,10 +31,12 @@ bool RlClone::PhysicsBackend::AssertFailedImpl(
 #endif // JPH_ENABLE_ASSERTS
 
 
-bool RlClone::PhysicsBackend::ObjectLayerPairFilterImpl::ShouldCollide(ObjectLayer inObject1, ObjectLayer inObject2)
-    const {
+bool RlClone::PhysicsBackend::ObjectLayerPairFilterImpl::ShouldCollide(
+    ObjectLayer inObject1,
+    ObjectLayer inObject2) const {
     switch (inObject1) {
-        case Layers::NON_MOVING: return inObject2 == Layers::MOVING; // Non moving only collides with moving
+        case Layers::NON_MOVING:
+            return inObject2 == Layers::MOVING; // Non moving only collides with moving
         case Layers::MOVING: return true; // Moving collides with everything
         default: JPH_ASSERT(false); return false;
     }
@@ -52,14 +55,16 @@ uint RlClone::PhysicsBackend::BPLayerInterfaceImpl::GetNumBroadPhaseLayers() con
 }
 
 
-BroadPhaseLayer RlClone::PhysicsBackend::BPLayerInterfaceImpl::GetBroadPhaseLayer(ObjectLayer inLayer) const {
+BroadPhaseLayer
+RlClone::PhysicsBackend::BPLayerInterfaceImpl::GetBroadPhaseLayer(ObjectLayer inLayer) const {
     JPH_ASSERT(inLayer < Layers::NUM_LAYERS);
     return mObjectToBroadPhase[inLayer];
 }
 
 
 #if defined(JPH_EXTERNAL_PROFILE) || defined(JPH_PROFILE_ENABLED)
-const char* RlClone::PhysicsBackend::BPLayerInterfaceImpl::GetBroadPhaseLayerName(BroadPhaseLayer inLayer) const {
+const char* RlClone::PhysicsBackend::BPLayerInterfaceImpl::GetBroadPhaseLayerName(
+    BroadPhaseLayer inLayer) const {
     switch ((BroadPhaseLayer::Type)inLayer) {
         case (BroadPhaseLayer::Type)BroadPhaseLayers::NON_MOVING: return "NON_MOVING";
         case (BroadPhaseLayer::Type)BroadPhaseLayers::MOVING: return "MOVING";
@@ -111,12 +116,15 @@ void RlClone::PhysicsBackend::MyContactListener::OnContactPersisted(
 }
 
 
-void RlClone::PhysicsBackend::MyContactListener::OnContactRemoved(const SubShapeIDPair& inSubShapePair) {
+void RlClone::PhysicsBackend::MyContactListener::OnContactRemoved(
+    const SubShapeIDPair& inSubShapePair) {
     cout << "A contact was removed" << endl;
 }
 
 
-void RlClone::PhysicsBackend::MyBodyActivationListener::OnBodyActivated(const BodyID& inBodyID, uint64 inBodyUserData) {
+void RlClone::PhysicsBackend::MyBodyActivationListener::OnBodyActivated(
+    const BodyID& inBodyID,
+    uint64 inBodyUserData) {
     cout << "A body got activated" << endl;
 }
 
@@ -128,7 +136,8 @@ void RlClone::PhysicsBackend::MyBodyActivationListener::OnBodyDeactivated(
 }
 
 
-RlClone::PhysicsBackend::GamePhysicsBackend::GamePhysicsBackendContext::GamePhysicsBackendContext() {
+RlClone::PhysicsBackend::GamePhysicsBackend::GamePhysicsBackendContext::
+    GamePhysicsBackendContext() {
     // Initialize the Factory
     std::cout << "LOG: Initializing GamePhysicsBackendContext" << std::endl;
     RegisterDefaultAllocator();
@@ -141,7 +150,8 @@ RlClone::PhysicsBackend::GamePhysicsBackend::GamePhysicsBackendContext::GamePhys
 }
 
 
-RlClone::PhysicsBackend::GamePhysicsBackend::GamePhysicsBackendContext::~GamePhysicsBackendContext() {
+RlClone::PhysicsBackend::GamePhysicsBackend::GamePhysicsBackendContext::
+    ~GamePhysicsBackendContext() {
     std::cout << "LOG: Destroying GamePhysicsBackendContext" << std::endl;
     // Delete the factory
     UnregisterTypes();
