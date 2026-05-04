@@ -1,25 +1,16 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-
-// STL includes
-#include <iostream>
-#include <thread>
-
-
 // The physics backend
 #include <game/game_physics_backend.hpp>
 
 
 // For entity component system
 #include <entt/entt.hpp>
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
 
 
-namespace raylib {
-#include <raylib.h>
-};
+// For random number gen
+#include <random>
 
 
 // All Jolt symbols are in the JPH namespace
@@ -34,16 +25,13 @@ using namespace JPH::literals;
 
 namespace RlClone {
 
-  
-struct GameConfig {};  
 
-  
+struct GameConfig {};
 class Game {
 private:
     PhysicsBackend::GamePhysicsBackend game_physics_backend;
     entt::registry entity_registry;
-    raylib::Camera3D main_camera;
-  
+    std::mt19937 rand_dev;
 public:
     Game(
         const uint AllocatorMaxSize = (1024 * 1024 * 10),
@@ -54,22 +42,18 @@ public:
     Game(GameConfig config);
     ~Game();
 
-  
+
     void Init();
     void Cleanup();
 
-  
+
     void MainLoop();
     bool ShouldGameStop();
     void Update();
     void Render();
-
-  
-    void InitDemo();
-    void CleanupDemo();
 };
 
-  
+
 } // namespace RlClone
 
 
