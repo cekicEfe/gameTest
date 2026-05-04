@@ -1,20 +1,23 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(RevEngine)
     
+project(RevEngine)
+
+        
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-        
+
+            
 add_subdirectory(src)
 add_subdirectory($ENV{JOLT_REPO}/Build/ include/Jolt)
-    
+
+        
 target_compile_options(Jolt PRIVATE
     -Wno-array-bounds
 )
 
-configure_file(fonts/alagard.ttf src/ COPYONLY)    
-        
+    
 target_include_directories (
     RevEngine
     PUBLIC
@@ -23,13 +26,16 @@ target_include_directories (
     #src/core/render/
     src/game/
 )
-    
+
+        
 target_link_libraries(RevEngine PUBLIC Jolt raylib glfw vulkan)
+
     
 target_compile_definitions(RevEngine PRIVATE
    USE_VULKAN_BACKEND
    VULKAN_HPP_DISPATCH_LOADER_DYNAMIC=1
    VULKAN_HPP_NO_STRUCT_CONSTRUCTORS=1
 )
+
     
 install(TARGETS RevEngine DESTINATION bin)
