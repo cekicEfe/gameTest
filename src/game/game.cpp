@@ -20,8 +20,7 @@ RlClone::Game::Game(
           cMaxBodies,
           cNumBodyMutexes,
           cMaxBodyPairs,
-          cMaxContactConstraints)
-    , rand_dev(time(nullptr)) {
+          cMaxContactConstraints) {
     std::cout << "LOG: Creating game object" << std::endl;
 
 
@@ -41,21 +40,6 @@ void RlClone::Game::Init() {
     std::cout << "LOG: Initializing the game" << std::endl;
 
 
-    this->test_camera.position = (raylib::Vector3){16.0f, 14.0f, 16.0f}; // Camera position
-    this->test_camera.target = (raylib::Vector3){0.0f, 0.0f, 0.0f}; // Camera looking at point
-    this->test_camera.up =
-        (raylib::Vector3){0.0f, 1.0f, 0.0f}; // Camera up vector (rotation towards target)
-    this->test_camera.fovy = 45.0f; // Camera field-of-view Y
-    this->test_camera.projection = raylib::CAMERA_PERSPECTIVE; // Camera projection type
-
-
-    this->test_model = raylib::LoadModel("resources/kenney/factory/Models/pipe-glass-large.obj");
-    this->alagard_font = raylib::LoadFont("resources/fonts/alagard.ttf");
-
-
-    auto entity = this->entity_registry.create();
-
-
     std::cout << "LOG: Initialized the game successfully" << std::endl;
 }
 
@@ -65,26 +49,6 @@ void RlClone::Game::Init() {
 // object deconstructor on the app
 void RlClone::Game::Cleanup() {
     std::cout << "LOG: Cleaning up game" << std::endl;
-
-
-    raylib::UnloadFont(this->alagard_font); // AngelCode Font unloading
-    raylib::UnloadModel(this->test_model);
-
-
-    BodyInterface& body_interface =
-        this->game_physics_backend.GetPhysicsSystem().GetBodyInterface();
-
-
-    auto view = this->entity_registry.view<BodyID>();
-
-
-    std::cout << "LOG: Cleaning bodies" << std::endl;
-    for (auto& view_element : view) {
-        body_interface.RemoveBody(this->entity_registry.get<BodyID>(view_element));
-        body_interface.DestroyBody(this->entity_registry.get<BodyID>(view_element));
-        this->entity_registry.erase<BodyID>(view_element);
-    }
-    std::cout << "LOG: Cleaned up bodies successfully" << std::endl;
 
 
     std::cout << "LOG: Cleaned up game successfully" << std::endl;
@@ -105,8 +69,6 @@ bool RlClone::Game::ShouldGameStop() {
 
 
 void RlClone::Game::Update() {
-    raylib::UpdateCamera(&this->test_camera, raylib::CAMERA_ORBITAL);
-
     this->game_physics_backend.GetPhysicsSystem().Update(
         PhysicsBackend::GamePhysicsBackend::delta_time,
         1,
@@ -124,31 +86,6 @@ void RlClone::Game::Render() {
 
     raylib::DrawFPS(20, 20);
     raylib::DrawText("Hello world", 50, 50, 20, raylib::DARKGRAY);
-    raylib::DrawTextEx(
-        this->alagard_font,
-        "herro",
-        (raylib::Vector2){20.0f, 100.0f},
-        (float)this->alagard_font.baseSize,
-        2,
-        raylib::MAROON);
-
-
-    raylib::BeginMode3D(this->test_camera);
-    raylib::DrawModelEx(
-        this->test_model,
-        {0.0f, 0.0f, 0.0f},
-        {0.0, 1.0, 0.0f},
-        0,
-        {1.0f, 1.0f, 1.0f},
-        raylib::WHITE); // Draw a model with extended parameters
-
-    raylib::DrawModel(
-        this->test_model,
-        {0.0f, 1.0f, 0.0f},
-        1.0f,
-        raylib::BLANK); // Draw a model (with texture if set)
-
-    raylib::EndMode3D();
 
 
     raylib::EndDrawing();

@@ -1,6 +1,7 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
+
 // The physics backend
 #include <game/game_physics_backend.hpp>
 
@@ -11,6 +12,10 @@
 
 // For random number gen
 #include <random>
+
+
+// For deferred member initializition
+#include <optional>
 
 
 // All Jolt symbols are in the JPH namespace
@@ -36,13 +41,6 @@ class Game {
 private:
     PhysicsBackend::GamePhysicsBackend game_physics_backend;
     entt::registry entity_registry;
-    std::mt19937 rand_dev;
-
-    
-  raylib::Camera test_camera;
-    raylib::Font alagard_font;
-    raylib::Model test_model;
-  
 public:
     Game(
         const uint AllocatorMaxSize = (1024 * 1024 * 10),
