@@ -39,7 +39,11 @@
               clang
               valgrind
               gcc
+              doxygen
+              python3
               
+              JOLT_REPO
+
               pkg-config
               vulkan-loader
               vulkan-tools

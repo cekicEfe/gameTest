@@ -1,40 +1,23 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-
-// The physics backend
-#include <game/game_physics_backend.hpp>
-
-
 // For entity component system
 #include <entt/entt.hpp>
-
 
 // For random number gen
 #include <random>
 
+// For Car 
+#include <Game/Car.hpp>
 
-// For deferred member initializition
-#include <optional>
-
-
-// All Jolt symbols are in the JPH namespace
-using namespace JPH;
-
-
-// If you want your code to compile using single or double precision write 0.0_r
-// to get a Real value that compiles to double or float depending if
-// JPH_DOUBLE_PRECISION is set or not.
-using namespace JPH::literals;
-
+// For the physics backend
+#include <Game/GamePhysicsBackend.hpp>
 
 namespace raylib {
 #include <raylib.h>
 };
 
-
 namespace RlClone {
-
 
 struct GameConfig {};
 class Game {
@@ -51,10 +34,8 @@ public:
     Game(GameConfig config);
     ~Game();
 
-
     void Init();
     void Cleanup();
-
 
     void MainLoop();
     bool ShouldGameStop();
@@ -62,8 +43,6 @@ public:
     void Render();
 };
 
-
 } // namespace RlClone
-
 
 #endif

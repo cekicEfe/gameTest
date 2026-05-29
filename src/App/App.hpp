@@ -1,19 +1,14 @@
 #ifndef APP_HPP
 #define APP_HPP
 
-
-#include <game.hpp>
-#include <string>
-// #include <render.hpp>
-
+#include <Game/Game.hpp> // For RlClone::Game
+#include <string> // For std::string
 
 namespace raylib {
-#include <raylib.h>
+#include <raylib.h> 
 };
 
-
 namespace RlClone {
-
 
 class App {
 private:
@@ -31,7 +26,6 @@ public:
 
     void Run();
 };
-
 
 } // namespace RlClone
 

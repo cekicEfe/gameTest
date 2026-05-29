@@ -1,4 +1,4 @@
-#include <app.hpp>
+#include <App/App.hpp>
 
 
 RlClone::App::App(const uint ScreenWidth, const uint ScreenHeight, const std::string WindowTitle)

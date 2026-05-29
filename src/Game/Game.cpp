@@ -1,13 +1,10 @@
-#include <game.hpp>
-
+#include <Game/Game.hpp>
 
 #include <ctime> // For time()
 #include <iostream> // For std::cout std::endl
 
-
-#include <glm/glm.hpp> //For glm
-#include <glm/gtc/quaternion.hpp> //For glm
-
+#include <glm/glm.hpp> // For glm
+#include <glm/gtc/quaternion.hpp> // For glm
 
 RlClone::Game::Game(
     const uint AllocatorMaxSize,
@@ -69,6 +66,7 @@ bool RlClone::Game::ShouldGameStop() {
 
 
 void RlClone::Game::Update() {
+    // Update the objects in physics system 
     this->game_physics_backend.GetPhysicsSystem().Update(
         PhysicsBackend::GamePhysicsBackend::delta_time,
         1,
@@ -79,14 +77,14 @@ void RlClone::Game::Update() {
 
 void RlClone::Game::Render() {
     raylib::BeginDrawing();
-
-
     raylib::ClearBackground(raylib::RAYWHITE);
 
 
+    
     raylib::DrawFPS(20, 20);
     raylib::DrawText("Hello world", 50, 50, 20, raylib::DARKGRAY);
 
-
+    
+    
     raylib::EndDrawing();
 }
