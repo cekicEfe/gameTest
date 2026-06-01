@@ -11,16 +11,18 @@
 namespace RlClone {
 
 struct RenderableTag {
-    void (*render_function)(entt::entity, const entt::registry&, const JPH::PhysicsSystem&);
+    void (*render_function)(
+        entt::entity, float delta_time, const entt::registry&, const JPH::PhysicsSystem&);
 };
 
 struct UpdatableTag {
-    void (*update_function)(entt::entity, const entt::registry&, const JPH::PhysicsSystem&);
+    void (*update_function)(
+        entt::entity, float delta_time, const entt::registry&, const JPH::PhysicsSystem&);
 };
 
 struct DeconstructableTag {
     void (*deconstructor_function)(entt::entity, const entt::registry&, const JPH::PhysicsSystem&);
-}
+};
 
 }; // namespace RlClone
 

@@ -16,7 +16,7 @@ SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -g")
     
 add_subdirectory(src)
 add_subdirectory($ENV{JOLT_REPO}/Build/ include/Jolt)
-        
+
 target_compile_options(Jolt PRIVATE
     -Wno-array-bounds
 )
@@ -33,7 +33,7 @@ target_include_directories (
 target_link_libraries(RevEngine PUBLIC Jolt raylib glfw vulkan)
 
 target_compile_definitions(RevEngine PRIVATE
-   USE_VULKAN_BACKEND
+   USE_VULKAN_BACKEND #This is for the future renderer
    VULKAN_HPP_DISPATCH_LOADER_DYNAMIC=1
    VULKAN_HPP_NO_STRUCT_CONSTRUCTORS=1
 )

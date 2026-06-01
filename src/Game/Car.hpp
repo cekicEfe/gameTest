@@ -37,8 +37,7 @@ namespace RlClone {
 
 struct CarTag {};
 
-class AbstractCarTemplate {
-public:
+struct AbstractCarTemplate {
     float wheel_radius = 0.3f;
     float wheel_width = 0.1f;
     float half_vehicle_length = 2.0f;
@@ -46,21 +45,21 @@ public:
     float half_vehicle_height = 0.2f;
 
 
-    RVec3 position(0, 2, 0);
-    RefConst<Shape> car_shape;
-    BodyCreationSettings car_body_settings;
-    VehicleConstraintSettings vehicle_settings;
+    JPH::RVec3 position = JPH::RVec3(0, 2, 0);
+    JPH::RefConst<JPH::Shape> car_shape;
+    JPH::BodyCreationSettings car_body_settings;
+    JPH::VehicleConstraintSettings vehicle_settings;
 
 
-    Vec3 front_suspension_dir;
-    Vec3 front_steering_axis;
-    Vec3 front_wheel_up;
-    Vec3 front_wheel_forward;
-    Vec3 rear_suspension_dir;
-    Vec3 rear_steering_axis;
-    Vec3 rear_wheel_up;
-    Vec3 rear_wheel_forward;
-    Vec3 flip_x(-1, 1, 1);
+    JPH::Vec3 front_suspension_dir;
+    JPH::Vec3 front_steering_axis;
+    JPH::Vec3 front_wheel_up;
+    JPH::Vec3 front_wheel_forward;
+    JPH::Vec3 rear_suspension_dir;
+    JPH::Vec3 rear_steering_axis;
+    JPH::Vec3 rear_wheel_up;
+    JPH::Vec3 rear_wheel_forward;
+    JPH::Vec3 flip_x = JPH::Vec3(-1, 1, 1);
 
 
     float initial_roll_angle = 0;
@@ -99,14 +98,17 @@ public:
     JPH::Body* car_body; ///< The vehicle
     JPH::Ref<JPH::VehicleConstraint> vehicle_constraint; ///< The vehicle constraint
     JPH::Ref<JPH::VehicleCollisionTester> testers[3]; ///< Collision testers for the wheel
-}
+};
 
 
 class AbstractCarBuilder {
 private:
+    entt::entity current_car_id = entt::null;
 public:
     AbstractCarBuilder();
     virtual ~AbstractCarBuilder() = 0;
+
+    virtual void InitilizeCar() = 0;
 
     virtual void SetWheelRadius() = 0;
     virtual void SetWheelWidth() = 0;
@@ -124,8 +126,8 @@ public:
 class AbstractCarDirector {
 private:
 public:
-    AbstractCarBuilder();
-    virtual ~AbstractCarBuilder() = 0;
+    AbstractCarDirector();
+    virtual ~AbstractCarDirector() = 0;
 
     virtual entt::entity Construct() = 0;
 };
