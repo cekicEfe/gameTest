@@ -41,6 +41,7 @@
               gcc
               doxygen
               python3
+              perf
               
               JOLT_REPO
 

@@ -1,7 +1,7 @@
 #ifndef APP_HPP
 #define APP_HPP
 
-#include <Game/Game.hpp> // For RlClone::Game
+#include <game/Game.hpp> // For RlClone::Game
 #include <string> // For std::string
 
 namespace raylib {

@@ -27,6 +27,9 @@ target_include_directories (
     src/
     src/app/
     src/game/
+    src/core/physics/
+    src/game/components/
+    src/game/entity_builders/
     $ENV{JOLT_REPO}/
 )
 

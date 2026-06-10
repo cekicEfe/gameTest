@@ -1,4 +1,4 @@
-#include <Game/GamePhysicsBackend.hpp>
+#include <core/physics/GamePhysicsBackend.hpp>
 
 
 void RlClone::PhysicsBackend::TraceImpl(const char* inFMT, ...) {
@@ -61,7 +61,8 @@ RlClone::PhysicsBackend::GamePhysicsBackend::GamePhysicsBackend(
     const uint cMaxContactConstraints)
     : physics_context()
     , temp_allocator(AllocatorMaxSize)
-    , job_system(JPH::cMaxPhysicsJobs, JPH::cMaxPhysicsBarriers, thread::hardware_concurrency() - 1) {
+    , job_system(
+          JPH::cMaxPhysicsJobs, JPH::cMaxPhysicsBarriers, thread::hardware_concurrency() - 1) {
     std::cout << "LOG: Initializing Physicsbackend" << std::endl;
     this->physics_system.Init(
         cMaxBodies,

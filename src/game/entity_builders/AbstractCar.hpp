@@ -1,9 +1,6 @@
 #ifndef CAR_HPP
 #define CAR_HPP
 
-// The Jolt headers don't include Jolt.h. Always include Jolt.h before including
-// any other Jolt header. You can use Jolt.h in your precompiled header to speed
-// up compilation.
 #include <Jolt/Jolt.h>
 
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
@@ -15,28 +12,26 @@
 #include <Jolt/Physics/Vehicle/WheeledVehicleController.h>
 
 // For Layer implementation
-#include <Game/Layers.hpp>
+#include <core/physics/Layers.hpp>
 
 // For the physics backend
-#include <Game/GamePhysicsBackend.hpp>
+#include <core/physics/GamePhysicsBackend.hpp>
 
 // For core traits
-#include <Game/CoreTraits.hpp>
+#include <game/components/CoreComponents.hpp>
 
 // For Entity Component System
 #include <entt/entt.hpp>
-
-// For concepts
-#include <concepts>
 
 namespace raylib {
 #include <raylib.h>
 };
 
+
 namespace RlClone {
 
-struct CarTag {};
-
+struct CarTag {};    
+  
 struct AbstractCarTemplate {
     float wheel_radius = 0.3f;
     float wheel_width = 0.1f;
@@ -45,7 +40,7 @@ struct AbstractCarTemplate {
     float half_vehicle_height = 0.2f;
 
 
-    JPH::RVec3 position = JPH::RVec3(0, 2, 0);
+    JPH::RVec3 position;
     JPH::RefConst<JPH::Shape> car_shape;
     JPH::BodyCreationSettings car_body_settings;
     JPH::VehicleConstraintSettings vehicle_settings;
@@ -73,6 +68,8 @@ struct AbstractCarTemplate {
         false; ///< If true, gravity is overridden to always oppose the ground normal
     float max_engine_torque = 500.0f;
     float clutch_strength = 10.0f;
+
+  
     float front_caster_angle = 0.0f;
     float front_king_pin_angle = 0.0f;
     float front_camber = 0.0f;
@@ -102,19 +99,23 @@ struct AbstractCarTemplate {
 
 
 class AbstractCarBuilder {
-private:
+protected:
     entt::entity current_car_id = entt::null;
+
 public:
     AbstractCarBuilder();
     virtual ~AbstractCarBuilder() = 0;
-
+  
     virtual void InitilizeCar() = 0;
 
     virtual void SetWheelRadius() = 0;
     virtual void SetWheelWidth() = 0;
+    virtual void SetWheelModel() = 0;
+  
     virtual void SetCarHitbox() = 0;
     virtual void SetCarPosition() = 0;
-
+    virtual void SetCarModel() = 0;
+  
     virtual void SetRenderer() = 0;
     virtual void SetUpdater() = 0;
     virtual void SetDeconstructor() = 0;
@@ -123,8 +124,8 @@ public:
 };
 
 
+// Optional to use 
 class AbstractCarDirector {
-private:
 public:
     AbstractCarDirector();
     virtual ~AbstractCarDirector() = 0;

@@ -1,4 +1,4 @@
-#include <Game/Game.hpp>
+#include <game/Game.hpp>
 
 #include <ctime> // For time()
 #include <iostream> // For std::cout std::endl
@@ -13,11 +13,7 @@ RlClone::Game::Game(
     const uint cMaxBodyPairs,
     const uint cMaxContactConstraints)
     : game_physics_backend(
-          AllocatorMaxSize,
-          cMaxBodies,
-          cNumBodyMutexes,
-          cMaxBodyPairs,
-          cMaxContactConstraints) {
+          AllocatorMaxSize, cMaxBodies, cNumBodyMutexes, cMaxBodyPairs, cMaxContactConstraints) {
     std::cout << "LOG: Creating game object" << std::endl;
 
 
@@ -66,7 +62,7 @@ bool RlClone::Game::ShouldGameStop() {
 
 
 void RlClone::Game::Update() {
-    // Update the objects in physics system 
+    // Update the objects in physics system
     this->game_physics_backend.GetPhysicsSystem().Update(
         PhysicsBackend::GamePhysicsBackend::delta_time,
         1,
@@ -80,11 +76,9 @@ void RlClone::Game::Render() {
     raylib::ClearBackground(raylib::RAYWHITE);
 
 
-    
     raylib::DrawFPS(20, 20);
     raylib::DrawText("Hello world", 50, 50, 20, raylib::DARKGRAY);
 
-    
-    
+
     raylib::EndDrawing();
 }

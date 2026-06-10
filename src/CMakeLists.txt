@@ -1,15 +1,17 @@
 add_executable(RevEngine
-  main.cpp
+  main.cpp    
+  app/App.cpp  
+  app/App.hpp
+
+  core/physics/GamePhysicsBackend.hpp
+  core/physics/GamePhysicsBackend.cpp
+  core/physics/Listener.hpp
+  core/physics/Listener.cpp    
+  core/physics/Layers.hpp
+  core/physics/Layers.cpp
     
-  App/App.cpp  
-  App/App.hpp
-    
-  Game/Layers.hpp
-  Game/Layers.cpp
-        
-  Game/GamePhysicsBackend.hpp
-  Game/GamePhysicsBackend.cpp
-    
-  Game/Game.hpp
-  Game/Game.cpp
+  game/components/CoreComponents.hpp
+  game/entity_builders/AbstractCar.hpp
+  game/Game.hpp
+  game/Game.cpp
 )
