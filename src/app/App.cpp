@@ -6,7 +6,6 @@ RlClone::App::App(const uint ScreenWidth, const uint ScreenHeight, const std::st
     , ScreenHeight(ScreenHeight)
     , WindowTitle(WindowTitle)
     , Game() {
-
     std::cout << "LOG: Initializing app object" << std::endl;
     std::cout << "LOG: Initializing raylib" << std::endl;
     raylib::InitWindow(this->ScreenWidth, this->ScreenHeight, this->WindowTitle.data());
@@ -17,10 +16,15 @@ RlClone::App::App(const uint ScreenWidth, const uint ScreenHeight, const std::st
 }
 
 
-RlClone::App::~App(){
+RlClone::App::~App() {
     std::cout << "LOG: Destroying app object" << std::endl;
+
     this->Game.Cleanup();
+
+    std::cout << "LOG: Destroying raylib" << std::endl;
     raylib::CloseWindow(); // Close window and OpenGL context
+    std::cout << "LOG: Destroyed raylib" << std::endl;
+
     std::cout << "LOG: Destroyed app successfully" << std::endl;
 }
 

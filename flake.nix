@@ -23,16 +23,16 @@
             tag = "v5.5.0";
             hash = "sha256-OQ3kqpd0NBKA0e/YRNCKaSR0wKIto1mcZ+X93CuJ+Dc=";
           };
-          
+
         in {
           default = pkgs.mkShell {
 
             C_COMPILER = "${pkgs.gcc}/bin/gcc";
             CXX_COMPILER = "${pkgs.gcc}/bin/g++";
-            
+
             JOLT_REPO = JOLT_REPO;
-            
-            packages = with pkgs; [
+
+            nativeBuildInputs = with pkgs; [
               gdb
               cmake
               ninja
@@ -42,14 +42,17 @@
               doxygen
               python3
               perf
-              
-              JOLT_REPO
 
               pkg-config
               vulkan-loader
               vulkan-tools
               vulkan-validation-layers
               directx-shader-compiler
+            ];
+
+            buildInputs = with pkgs; [
+              JOLT_REPO
+
               raylib
               entt
               glm
@@ -81,7 +84,7 @@
               pkgs.xorg.libXrandr
               pkgs.xorg.libXi
             ];
-            
+
           };
         });
 
@@ -92,7 +95,7 @@
             tag = "v5.5.0";
             hash = "sha256-OQ3kqpd0NBKA0e/YRNCKaSR0wKIto1mcZ+X93CuJ+Dc=";
           };
-          
+
         in {
           default = pkgs.stdenv.mkDerivation {
             pname = "RevEngine";
@@ -101,17 +104,17 @@
 
             C_COMPILER = "${pkgs.gcc}/bin/gcc";
             CXX_COMPILER = "${pkgs.gcc}/bin/g++";
-            
+
             JOLT_REPO = JOLT_REPO;
-            
-            nativeBuildInputs = with pkgs; [ cmake ninja clang gcc];
+
+            nativeBuildInputs = with pkgs; [ cmake ninja clang gcc ];
             buildInputs = with pkgs; [
               pkgs.pkg-config
               pkgs.vulkan-loader
               pkgs.vulkan-tools
               pkgs.vulkan-validation-layers
               pkgs.directx-shader-compiler
-              
+
               pkgs.raylib
               pkgs.entt
               pkgs.glm

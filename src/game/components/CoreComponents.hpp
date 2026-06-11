@@ -8,7 +8,6 @@
 #include <Jolt/Physics/PhysicsSettings.h>
 #include <Jolt/Physics/PhysicsSystem.h> // For JPH::PhysicsSystem
 
-// For ECS
 #include <entt/entt.hpp>
 
 // For uint32_t

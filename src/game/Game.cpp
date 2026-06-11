@@ -56,7 +56,7 @@ void RlClone::Game::MainLoop() {
 }
 
 
-bool RlClone::Game::ShouldGameStop() {
+bool RlClone::Game::ShouldGameStop() { // Will be more complex in the future
     return false;
 }
 

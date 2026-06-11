@@ -12,6 +12,8 @@ add_executable(RevEngine
     
   game/components/CoreComponents.hpp
   game/entity_builders/AbstractCar.hpp
+  game/AssetManager.hpp
+  game/AssetManager.cpp        
   game/Game.hpp
   game/Game.cpp
 )

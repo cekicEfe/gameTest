@@ -17,7 +17,6 @@ private:
     std::string WindowTitle;
 
     RlClone::Game Game;
-    // core::Renderer Renderer;
 public:
     App(const uint ScreenWidth = 1920,
         const uint ScreenHeight = 1080,
