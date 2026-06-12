@@ -26,6 +26,8 @@ namespace RlClone {
     entt::entity parent = entt::null;
     entt::entity next_child = entt::null;
   };
+
+  struct DemoPlayerEntityComponent {};
   
 };
 

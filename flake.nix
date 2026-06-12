@@ -53,6 +53,7 @@
             buildInputs = with pkgs; [
               JOLT_REPO
 
+              recastnavigation
               raylib
               entt
               glm
@@ -109,6 +110,7 @@
 
             nativeBuildInputs = with pkgs; [ cmake ninja clang gcc ];
             buildInputs = with pkgs; [
+              recastnavigation
               pkgs.pkg-config
               pkgs.vulkan-loader
               pkgs.vulkan-tools

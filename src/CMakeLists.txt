@@ -1,4 +1,6 @@
-add_executable(RevEngine
+
+
+add_executable(RevEngineMainExe
   main.cpp    
   app/App.cpp  
   app/App.hpp

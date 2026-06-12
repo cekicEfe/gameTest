@@ -5,7 +5,7 @@
 #include <Jolt/Core/Factory.h> // For JPH::Factory::sInstance
 #include <Jolt/Core/JobSystemThreadPool.h> // For JPH::JobSystemThreadPool
 #include <Jolt/Core/TempAllocator.h> // For JPH::TempAllocatorImpl
-#include <Jolt/Physics/PhysicsSettings.h> //
+#include <Jolt/Physics/PhysicsSettings.h>
 #include <Jolt/Physics/PhysicsSystem.h> // For JPH::PhysicsSystem
 #include <Jolt/RegisterTypes.h> // For JPH::RegisterDefaultAllocator();
           // JPH::RegisterTypes(); JPH::UnregisterTypes();

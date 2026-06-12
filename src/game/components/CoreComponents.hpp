@@ -8,11 +8,13 @@
 #include <Jolt/Physics/PhysicsSettings.h>
 #include <Jolt/Physics/PhysicsSystem.h> // For JPH::PhysicsSystem
 
+// For ecs
 #include <entt/entt.hpp>
 
 // For uint32_t
 #include <cstdint>
 
+// For rendering 
 namespace raylib {
 #include <raylib.h>
 }
@@ -20,23 +22,45 @@ namespace raylib {
 
 namespace RlClone {
 
-
-struct RenderComponent {
-    std::uint32_t main_model_id;
-    std::uint32_t shader_id;    
-};
-
+  
 struct TransformComponent {
     JPH::RVec3 position;
     JPH::Quat rotation;
+    float scale;
 };
 
+  
 struct PhysicsComponent {
     JPH::BodyID body_id;
 };
 
+  
+struct VelocityComponent {
+    JPH::Vec3 velocity_vector;
+};
 
-// These components works as a toggle 
+  
+struct ModelComponent {
+    std::uint32_t model_id;
+};
+
+
+struct TextureComponent {
+  std::uint32_t texture_id;
+};
+  
+  
+struct ShaderComponent {
+    std::uint32_t shader_id;
+};
+
+
+struct ModelAnimationComponent {
+    std::uint32_t model_animation_id;
+};
+  
+  
+// These components works as a toggle
 struct Renderable {};
 struct Updatable {};
 

@@ -1,10 +1,5 @@
 #include <game/Game.hpp>
 
-#include <ctime> // For time()
-#include <iostream> // For std::cout std::endl
-
-#include <glm/glm.hpp> // For glm
-#include <glm/gtc/quaternion.hpp> // For glm
 
 RlClone::Game::Game(
     const uint AllocatorMaxSize,

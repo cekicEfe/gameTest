@@ -4,17 +4,35 @@
 RlClone::AssetManager::AssetManager() {}
 
 
-RlClone::AssetManager::~AssetManager() {}
+RlClone::AssetManager::~AssetManager() {
+
+  for (auto& [model_id, model] : this->models) {
+    raylib::UnloadModel(model);
+  }
+
+  for (auto& [texture_id, texture] : this->textures) {
+    raylib::UnloadTexture(texture);
+  }
+
+  for (auto& [animation_id, model_anim] : this->animations) {
+    raylib::UnloadModelAnimations(model_anim.first, model_anim.second);
+  }  
+
+  for (auto& [shader_id, shader] : this->shaders) {
+    raylib::UnloadShader(shader);
+  }  
+    
+}
 
 
 std::uint32_t RlClone::AssetManager::PutModel(raylib::Model&& model) {
-    if (this->model_count == std::numeric_limits<std::uint32_t>::max()) {
+    if (this->last_model_index == std::numeric_limits<std::uint32_t>::max()) {
         throw std::runtime_error(
             "Maximum model count reached."); // Might remove this later this is very problematic
     }
     else {
-        this->models[++model_count] = model;
-        return model_count;
+        this->models[++last_model_index] = model;
+        return last_model_index;
     }
 }
 
@@ -45,13 +63,13 @@ void RlClone::AssetManager::DeleteModel(std::uint32_t model_id) {
 
 
 std::uint32_t RlClone::AssetManager::PutTexture(raylib::Texture2D&& texture) {
-    if (this->texture_count == std::numeric_limits<std::uint32_t>::max()) {
+    if (this->last_texture_index == std::numeric_limits<std::uint32_t>::max()) {
         throw std::runtime_error(
             "Maximum texture count reached."); // Might remove this later this is very problematic
     }
     else {
-        this->textures[++this->texture_count] = texture;
-        return this->texture_count;
+        this->textures[++this->last_texture_index] = texture;
+        return this->last_texture_index;
     }
 }
 
@@ -78,14 +96,15 @@ void RlClone::AssetManager::DeleteTexture(std::uint32_t texture_id) {
 }
 
 
-std::uint32_t RlClone::AssetManager::PutModelAnimation(std::pair<raylib::ModelAnimation*,RlClone::ModelAnimationCount> &&animation) {
-    if (this->animation_count == std::numeric_limits<std::uint32_t>::max()) {
+std::uint32_t RlClone::AssetManager::PutModelAnimation(
+    std::pair<raylib::ModelAnimation*, RlClone::ModelAnimationCount>&& animation) {
+    if (this->last_animation_index == std::numeric_limits<std::uint32_t>::max()) {
         throw std::runtime_error(
             "Maximum animation count reached"); // Might remove this later this is very problematic
     }
     else {
-        this->animations[++animation_count] = animation;
-        return animation_count;
+        this->animations[++last_animation_index] = animation;
+        return last_animation_index;
     }
 }
 
@@ -93,22 +112,61 @@ std::uint32_t RlClone::AssetManager::PutModelAnimation(std::pair<raylib::ModelAn
 std::optional<
     std::reference_wrapper<std::pair<raylib::ModelAnimation*, RlClone::ModelAnimationCount>>>
 RlClone::AssetManager::GetModelAnimation(std::uint32_t model_animation_id) {
-  if(auto iterator = this->animations.find(model_animation_id); iterator != this->animations.end()){
-    return std::ref(iterator->second);
-  }
-  else{
-    return std::nullopt;
-  }
+    if (auto iterator = this->animations.find(model_animation_id);
+        iterator != this->animations.end()) {
+        return std::ref(iterator->second);
+    }
+    else {
+        return std::nullopt;
+    }
 }
 
 
 void RlClone::AssetManager::DeleteModelAnimation(std::uint32_t model_animation_id) {
-  if(auto iterator = this->animations.find(model_animation_id); iterator != this->animations.end()){
-    auto model_anim = std::move(iterator->second); 
-    raylib::UnloadModelAnimations(model_anim.first,model_anim.second);
-    this->animations.erase(iterator);
-  }
-  else{
-        std::cout << "[Warning]:Deleted model animation not found in AssetManager" << std::endl;   
-  }
+    if (auto iterator = this->animations.find(model_animation_id);
+        iterator != this->animations.end()) {
+        auto model_anim = std::move(iterator->second);
+        raylib::UnloadModelAnimations(model_anim.first, model_anim.second);
+        this->animations.erase(iterator);
+    }
+    else {
+        std::cout << "[Warning]:Deleted model animation not found in AssetManager" << std::endl;
+    }
+}
+
+
+std::uint32_t RlClone::AssetManager::PutShader(raylib::Shader&& shader) {
+    if (this->last_shader_index == std::numeric_limits<std::uint32_t>::max()) {
+        throw std::runtime_error(
+            "Maximum shader count reached."); // Might remove this later this is very problematic
+    }
+    else {
+        this->shaders[++last_shader_index] = shader;
+        return last_shader_index;
+    }
+}
+
+
+std::optional<std::reference_wrapper<raylib::Shader>>
+RlClone::AssetManager::GetShader(std::uint32_t shader_id) {
+    if (auto iterator = this->shaders.find(shader_id); iterator != this->shaders.end()) {
+        return std::ref(iterator->second);
+    }
+    else {
+        return std::nullopt;
+    }
+}
+
+
+void RlClone::AssetManager::DeleteShader(std::uint32_t shader_id) {
+    if (auto iterator = this->shaders.find(shader_id); iterator != this->shaders.end()) {
+        raylib::UnloadShader(
+            std::move(
+                iterator->second)); // We take the ownership of the model first THEN unload it;
+        this->shaders.erase(iterator);
+    }
+    else {
+        std::cout << "[Warning]: Tried to free shader that does not exists in AssetManager"
+                  << std::endl;
+    }
 }
