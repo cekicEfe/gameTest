@@ -26,27 +26,22 @@ namespace raylib {
 namespace RlClone {
 
 
-class ISystem {
+class AbstractSystem {
 protected:
     std::reference_wrapper<JPH::PhysicsSystem> physics_system_ref;
     std::reference_wrapper<entt::registry> entity_registry_ref;
     std::reference_wrapper<RlClone::AssetManager> asset_manager_ref;
 public:
-    ISystem(
+    AbstractSystem(
         JPH::PhysicsSystem& physics_system_ref,
         entt::registry& entity_registry_ref,
-        RlClone::AssetManager& asset_manager_ref) {
-        this->physics_system_ref = physics_system_ref;
-        this->entity_registry_ref = entity_registry_ref;
-        this->asset_manager_ref = asset_manager_ref;
-    }
-    virtual ~ISystem() = 0;
-    virtual void Update(const float delta_time) = 0;
+        RlClone::AssetManager& asset_manager_ref);
+    virtual ~AbstractSystem() {};
+    virtual void Update(const float delta_time) {};
 };
 
 
-class RenderSystem final : public ISystem {
-private:
+class RenderSystem : public RlClone::AbstractSystem {
 public:
     RenderSystem(
         JPH::PhysicsSystem& physics_system_ref,

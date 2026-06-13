@@ -62,8 +62,6 @@ public:
         const uint cMaxContactConstraints = 1024);
     ~GamePhysicsBackend();
 
-    static const constexpr float delta_time = 1 / 60;
-
     JPH::PhysicsSystem& GetPhysicsSystem();
     JPH::TempAllocatorImpl& GetTempAllocator();
     JPH::JobSystemThreadPool& GetJobSystemThreadPool();

@@ -1,6 +1,6 @@
 
 
-add_executable(RevEngineMainExe
+add_executable(RevEngine
   main.cpp    
   app/App.cpp  
   app/App.hpp
@@ -11,7 +11,9 @@ add_executable(RevEngineMainExe
   core/physics/Listener.cpp    
   core/physics/Layers.hpp
   core/physics/Layers.cpp
-    
+
+  game/systems/CoreSystems.cpp
+  game/systems/CoreSystems.hpp
   game/components/CoreComponents.hpp
   game/entity_builders/AbstractCar.hpp
   game/AssetManager.hpp

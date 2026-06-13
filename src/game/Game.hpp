@@ -4,6 +4,9 @@
 // For asset manager
 #include <game/AssetManager.hpp>
 
+// For ecs core systems
+#include <game/systems/CoreSystems.hpp>
+
 // For the physics backend
 #include <core/physics/GamePhysicsBackend.hpp>
 
@@ -23,10 +26,10 @@ namespace RlClone {
 class Game {
 private:
     PhysicsBackend::GamePhysicsBackend game_physics_backend;
-    RlClone::AssetManager asset_manager;
     entt::registry entity_registry;
+    RlClone::AssetManager asset_manager;
 
-
+    RenderSystem render_system;
 public:
     Game(
         const uint AllocatorMaxSize = (1024 * 1024 * 10),
@@ -35,10 +38,12 @@ public:
         const uint cMaxBodyPairs = 1024,
         const uint cMaxContactConstraints = 1024);
     ~Game();
-  
+
+    static const constexpr float delta_time = 1 / 60;
+
     void Init();
     void Cleanup();
-  
+
     void MainLoop();
     bool ShouldGameStop();
     void Update();

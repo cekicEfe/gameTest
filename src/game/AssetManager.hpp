@@ -31,7 +31,7 @@ namespace RlClone {
 using ModelMap = std::map<std::uint32_t, raylib::Model>;
 using TextureMap = std::map<std::uint32_t, raylib::Texture2D>;
 using ShaderMap = std::map<std::uint32_t, raylib::Shader>;
-  
+
 
 using ModelAnimationCount = uint32_t;
 using ModelAnimationsMap =
@@ -51,7 +51,7 @@ private:
     ModelAnimationsMap animations;
     std::uint32_t last_animation_index = 0;
 
-  
+
     ShaderMap shaders;
     std::uint32_t last_shader_index = 0;
 public:

@@ -8,7 +8,11 @@ RlClone::Game::Game(
     const uint cMaxBodyPairs,
     const uint cMaxContactConstraints)
     : game_physics_backend(
-          AllocatorMaxSize, cMaxBodies, cNumBodyMutexes, cMaxBodyPairs, cMaxContactConstraints) {
+          AllocatorMaxSize, cMaxBodies, cNumBodyMutexes, cMaxBodyPairs, cMaxContactConstraints)
+    , render_system(
+          this->game_physics_backend.GetPhysicsSystem(),
+          this->entity_registry,
+          this->asset_manager) {
     std::cout << "LOG: Creating game object" << std::endl;
 
 
@@ -44,7 +48,8 @@ void RlClone::Game::Cleanup() {
 
 
 void RlClone::Game::MainLoop() {
-    while (!raylib::WindowShouldClose()) {
+    while (!raylib::WindowShouldClose()) // Will use ShouldGameStop in the future
+    {
         this->Update();
         this->Render();
     }
@@ -57,9 +62,9 @@ bool RlClone::Game::ShouldGameStop() { // Will be more complex in the future
 
 
 void RlClone::Game::Update() {
-    // Update the objects in physics system
+    // Update the physics objects in physics system
     this->game_physics_backend.GetPhysicsSystem().Update(
-        PhysicsBackend::GamePhysicsBackend::delta_time,
+        RlClone::Game::delta_time,
         1,
         &this->game_physics_backend.GetTempAllocator(),
         &this->game_physics_backend.GetJobSystemThreadPool());
@@ -74,6 +79,10 @@ void RlClone::Game::Render() {
     raylib::DrawFPS(20, 20);
     raylib::DrawText("Hello world", 50, 50, 20, raylib::DARKGRAY);
 
+    
+    // We render objects via render system
+    this->render_system.Update(RlClone::Game::delta_time);
 
+    
     raylib::EndDrawing();
 }
