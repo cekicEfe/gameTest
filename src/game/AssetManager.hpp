@@ -20,22 +20,22 @@
 // For error logging
 #include <iostream>
 
-namespace raylib {
+
 #include <raylib.h>
-};
 
 
 namespace RlClone {
 
 
-using ModelMap = std::map<std::uint32_t, raylib::Model>;
-using TextureMap = std::map<std::uint32_t, raylib::Texture2D>;
-using ShaderMap = std::map<std::uint32_t, raylib::Shader>;
+// Using map is problematic change it to vector in the future 
+using ModelMap = std::map<std::uint32_t, Model>;
+using TextureMap = std::map<std::uint32_t, Texture2D>;
+using ShaderMap = std::map<std::uint32_t, Shader>;
 
 
 using ModelAnimationCount = uint32_t;
 using ModelAnimationsMap =
-    std::map<std::uint32_t, std::pair<raylib::ModelAnimation*, ModelAnimationCount>>;
+    std::map<std::uint32_t, std::pair<ModelAnimation*, ModelAnimationCount>>;
 
 
 class AssetManager final {
@@ -59,27 +59,29 @@ public:
     ~AssetManager();
 
 
-    std::uint32_t PutModel(raylib::Model&& model);
-    std::optional<std::reference_wrapper<raylib::Model>> GetModel(std::uint32_t id);
+    std::uint32_t PutModel(Model&& model);
+    std::optional<std::reference_wrapper<Model>> GetModel(std::uint32_t id);
     void DeleteModel(std::uint32_t model_id);
 
 
-    std::uint32_t PutTexture(raylib::Texture2D&& texture);
-    std::optional<std::reference_wrapper<raylib::Texture2D>> GetTexture(std::uint32_t id);
+    std::uint32_t PutTexture(Texture2D&& texture);
+    std::optional<std::reference_wrapper<Texture2D>> GetTexture(std::uint32_t id);
     void DeleteTexture(std::uint32_t model_id);
 
 
     std::uint32_t
-    PutModelAnimation(std::pair<raylib::ModelAnimation*, RlClone::ModelAnimationCount>&& animation);
+    PutModelAnimation(std::pair<ModelAnimation*, RlClone::ModelAnimationCount>&& animation);
     std::optional<
-        std::reference_wrapper<std::pair<raylib::ModelAnimation*, RlClone::ModelAnimationCount>>>
+        std::reference_wrapper<std::pair<ModelAnimation*, RlClone::ModelAnimationCount>>>
     GetModelAnimation(std::uint32_t id);
     void DeleteModelAnimation(std::uint32_t model_animation_id);
 
 
-    std::uint32_t PutShader(raylib::Shader&& shader);
-    std::optional<std::reference_wrapper<raylib::Shader>> GetShader(std::uint32_t id);
+    std::uint32_t PutShader(Shader&& shader);
+    std::optional<std::reference_wrapper<Shader>> GetShader(std::uint32_t id);
     void DeleteShader(std::uint32_t shader_id);
+
+  
 };
 
 

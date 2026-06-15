@@ -55,6 +55,7 @@
 
               recastnavigation
               raylib
+              raygui
               entt
               glm
               glfw
@@ -117,6 +118,7 @@
               pkgs.vulkan-validation-layers
               pkgs.directx-shader-compiler
 
+              pkgs.raygui
               pkgs.raylib
               pkgs.entt
               pkgs.glm

@@ -1,23 +1,14 @@
-
-
-add_executable(RevEngine
-  main.cpp    
-  app/App.cpp  
-  app/App.hpp
-
-  core/physics/GamePhysicsBackend.hpp
-  core/physics/GamePhysicsBackend.cpp
-  core/physics/Listener.hpp
-  core/physics/Listener.cpp    
-  core/physics/Layers.hpp
-  core/physics/Layers.cpp
-
-  game/systems/CoreSystems.cpp
-  game/systems/CoreSystems.hpp
-  game/components/CoreComponents.hpp
-  game/entity_builders/AbstractCar.hpp
-  game/AssetManager.hpp
-  game/AssetManager.cpp        
-  game/Game.hpp
-  game/Game.cpp
+add_library(RevEngineCore STATIC
+    ${EngineCoreFiles}
 )
+
+    
+target_link_libraries(RevEngineCore PUBLIC ${CoreDependencies})
+
+    
+target_include_directories (
+    RevEngineCore
+    PUBLIC
+    ${CoreIncludeDirs}
+)
+    

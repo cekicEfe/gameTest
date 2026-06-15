@@ -1,11 +1,8 @@
 #include <core/physics/Layers.hpp>
 
 
-using namespace JPH;
-
-
 bool RlClone::PhysicsBackend::ObjectLayerPairFilterImpl::ShouldCollide(
-    ObjectLayer inObject1, ObjectLayer inObject2) const {
+    JPH::ObjectLayer inObject1, JPH::ObjectLayer inObject2) const {
     switch (inObject1) {
         case Layers::NON_MOVING:
             return inObject2 == Layers::MOVING; // Non moving only collides with moving
@@ -27,8 +24,8 @@ uint RlClone::PhysicsBackend::BPLayerInterfaceImpl::GetNumBroadPhaseLayers() con
 }
 
 
-BroadPhaseLayer
-RlClone::PhysicsBackend::BPLayerInterfaceImpl::GetBroadPhaseLayer(ObjectLayer inLayer) const {
+JPH::BroadPhaseLayer
+RlClone::PhysicsBackend::BPLayerInterfaceImpl::GetBroadPhaseLayer(JPH::ObjectLayer inLayer) const {
     JPH_ASSERT(inLayer < Layers::NUM_LAYERS);
     return mObjectToBroadPhase[inLayer];
 }
@@ -36,10 +33,10 @@ RlClone::PhysicsBackend::BPLayerInterfaceImpl::GetBroadPhaseLayer(ObjectLayer in
 
 #if defined(JPH_EXTERNAL_PROFILE) || defined(JPH_PROFILE_ENABLED)
 const char* RlClone::PhysicsBackend::BPLayerInterfaceImpl::GetBroadPhaseLayerName(
-    BroadPhaseLayer inLayer) const {
-    switch ((BroadPhaseLayer::Type)inLayer) {
-        case (BroadPhaseLayer::Type)BroadPhaseLayers::NON_MOVING: return "NON_MOVING";
-        case (BroadPhaseLayer::Type)BroadPhaseLayers::MOVING: return "MOVING";
+    JPH::BroadPhaseLayer inLayer) const {
+    switch ((JPH::BroadPhaseLayer::Type)inLayer) {
+        case (JPH::BroadPhaseLayer::Type)BroadPhaseLayers::NON_MOVING: return "NON_MOVING";
+        case (JPH::BroadPhaseLayer::Type)BroadPhaseLayers::MOVING: return "MOVING";
         default: JPH_ASSERT(false); return "INVALID";
     }
 }
@@ -47,7 +44,7 @@ const char* RlClone::PhysicsBackend::BPLayerInterfaceImpl::GetBroadPhaseLayerNam
 
 
 bool RlClone::PhysicsBackend::ObjectVsBroadPhaseLayerFilterImpl::ShouldCollide(
-    ObjectLayer inLayer1, BroadPhaseLayer inLayer2) const {
+    JPH::ObjectLayer inLayer1, JPH::BroadPhaseLayer inLayer2) const {
     switch (inLayer1) {
         case Layers::NON_MOVING: return inLayer2 == BroadPhaseLayers::MOVING;
         case Layers::MOVING: return true;

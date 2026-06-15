@@ -23,10 +23,6 @@
 // For Entity Component System
 #include <entt/entt.hpp>
 
-namespace raylib {
-#include <raylib.h>
-};
-
 
 namespace RlClone {
 

@@ -1,35 +1,39 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-// For asset manager
-#include <game/AssetManager.hpp>
-
-// For ecs core systems
-#include <game/systems/CoreSystems.hpp>
-
 // For the physics backend
 #include <core/physics/GamePhysicsBackend.hpp>
 
 // For entity component system
 #include <entt/entt.hpp>
 
+// For asset manager
+#include <game/AssetManager.hpp>
+
+// For ecs core systems
+#include <game/systems/CoreSystems.hpp>
+
 // For std::cout std::endl
 #include <iostream>
 
-namespace raylib {
+// For rendering and audio
 #include <raylib.h>
-};
 
 
 namespace RlClone {
 
+
 class Game {
-private:
-    PhysicsBackend::GamePhysicsBackend game_physics_backend;
+protected:
     entt::registry entity_registry;
     RlClone::AssetManager asset_manager;
+    RlClone::PhysicsBackend::GamePhysicsBackend game_physics_backend;
 
-    RenderSystem render_system;
+  
+    RlClone::Render3DSystem render_3d_system;
+    RlClone::PhysicsSystem physics_system;
+
+  
 public:
     Game(
         const uint AllocatorMaxSize = (1024 * 1024 * 10),
@@ -39,15 +43,11 @@ public:
         const uint cMaxContactConstraints = 1024);
     ~Game();
 
+
     static const constexpr float delta_time = 1 / 60;
 
-    void Init();
-    void Cleanup();
 
-    void MainLoop();
-    bool ShouldGameStop();
-    void Update();
-    void Render();
+    void Run();
 };
 
 
