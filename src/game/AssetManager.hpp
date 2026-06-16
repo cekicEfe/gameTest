@@ -23,6 +23,7 @@
 // For asset hashing
 #include <entt/entt.hpp>
 
+// For renderer models
 #include <raylib.h>
 
 #include <string>

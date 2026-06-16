@@ -1,5 +1,8 @@
-#pragma once
+#ifndef DEMO_CHARACTER_CONTROLLER_SYSTEM_HPP
+#define DEMO_CHARACTER_CONTROLLER_SYSTEM_HPP
 
 namespace RlClone::Demo {
 
 };
+
+#endif

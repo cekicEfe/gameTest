@@ -29,8 +29,6 @@ namespace RlClone {
 class Game {
 protected:
     entt::registry entity_registry;
-    RlClone::AssetManager asset_manager;
-    RlClone::PhysicsBackend::GamePhysicsBackend game_physics_backend;
 
   
     RlClone::Render3DSystem render_3d_system;
@@ -38,6 +36,17 @@ protected:
 
   
 public:
+
+    /*!
+     * \brief Creates the game object 
+     * * \details 
+     * Initializes raylib main window
+     * Creates game physics backend
+     * Creates asset manager
+     * Creates the ecs Systems
+     * Creates the main camera
+     * 
+     */
     Game(
         const uint AllocatorMaxSize = (1024 * 1024 * 10),
         const uint cMaxBodies = 1024,
@@ -49,7 +58,21 @@ public:
 
     static const constexpr float delta_time = 1 / 60;
 
-  
+    /*!
+     * \brief Runs the game loop
+     * * \details
+     * 1. Polls events
+     * 2. Updates objects
+     * 3. Renders renderables
+     * 3.1 Renders 2d objects (like gui)
+     * 3.2 Renders 3d objects (like characters)
+     *
+     * Note:
+     * process 3.2 NEEDS RlClone::MainCameraComponent to exist in entity_registry.ctx()
+     *
+     * Does not throw an error on its own
+     *
+     */
     void Run();
 };
 

@@ -42,6 +42,7 @@
               doxygen
               python3
               perf
+              clang-uml
 
               pkg-config
               vulkan-loader
