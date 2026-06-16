@@ -5,34 +5,41 @@ RlClone::AssetManager::AssetManager() {}
 
 
 RlClone::AssetManager::~AssetManager() {
+    for (auto& [model_id, model] : this->models) {
+        UnloadModel(model);
+    }
 
-  for (auto& [model_id, model] : this->models) {
-    UnloadModel(model);
-  }
+    for (auto& [texture_id, texture] : this->textures) {
+        UnloadTexture(texture);
+    }
 
-  for (auto& [texture_id, texture] : this->textures) {
-    UnloadTexture(texture);
-  }
+    for (auto& [animation_id, model_anim] : this->animations) {
+        UnloadModelAnimations(model_anim.first, model_anim.second);
+    }
 
-  for (auto& [animation_id, model_anim] : this->animations) {
-    UnloadModelAnimations(model_anim.first, model_anim.second);
-  }  
-
-  for (auto& [shader_id, shader] : this->shaders) {
-    UnloadShader(shader);
-  }  
-    
+    for (auto& [shader_id, shader] : this->shaders) {
+        UnloadShader(shader);
+    }
 }
 
 
-std::uint32_t RlClone::AssetManager::PutModel(Model&& model) {
-    if (this->last_model_index == std::numeric_limits<std::uint32_t>::max()) {
-        throw std::runtime_error(
-            "Maximum model count reached."); // Might remove this later this is very problematic
-    }
-    else {
-        this->models[++last_model_index] = model;
-        return last_model_index;
+std::optional<std::uint32_t> RlClone::AssetManager::PutModel(const std::string asset_name) {
+    try {
+        auto string_hash = entt::hashed_string(asset_name.data()).value();
+
+        if (this->models.find(string_hash) != this->models.end()) {
+            // We already have the asset
+            return string_hash;
+        }
+        else {
+            // We don't have the asset
+            Model model = LoadModel(asset_name.data());
+            this->models[string_hash] = std::move(model);
+            return string_hash;
+        }
+    } catch (std::exception &e) {
+        std::cout << e.what() << std::endl;
+        return std::nullopt;
     }
 }
 
@@ -62,14 +69,23 @@ void RlClone::AssetManager::DeleteModel(std::uint32_t model_id) {
 }
 
 
-std::uint32_t RlClone::AssetManager::PutTexture(Texture2D&& texture) {
-    if (this->last_texture_index == std::numeric_limits<std::uint32_t>::max()) {
-        throw std::runtime_error(
-            "Maximum texture count reached."); // Might remove this later this is very problematic
-    }
-    else {
-        this->textures[++this->last_texture_index] = texture;
-        return this->last_texture_index;
+std::optional<std::uint32_t> RlClone::AssetManager::PutTexture(const std::string asset_name) {
+    try {
+        auto string_hash = entt::hashed_string(asset_name.data()).value();
+
+        if (this->textures.find(string_hash) != this->textures.end()) {
+            // We already have the asset
+            return string_hash;
+        }
+        else {
+            // We don't have the asset
+            Texture2D texture = LoadTexture(asset_name.data());
+            this->textures[string_hash] = std::move(texture);
+            return string_hash;
+        }
+    } catch (std::exception& e) {
+        std::cout << e.what() << std::endl;
+        return std::nullopt;
     }
 }
 
@@ -96,21 +112,31 @@ void RlClone::AssetManager::DeleteTexture(std::uint32_t texture_id) {
 }
 
 
-std::uint32_t RlClone::AssetManager::PutModelAnimation(
-    std::pair<ModelAnimation*, RlClone::ModelAnimationCount>&& animation) {
-    if (this->last_animation_index == std::numeric_limits<std::uint32_t>::max()) {
-        throw std::runtime_error(
-            "Maximum animation count reached"); // Might remove this later this is very problematic
-    }
-    else {
-        this->animations[++last_animation_index] = animation;
-        return last_animation_index;
+std::optional<std::uint32_t>
+RlClone::AssetManager::PutModelAnimation(const std::string asset_name) {
+    try {
+        auto string_hash = entt::hashed_string(asset_name.data()).value();
+
+        if (this->animations.find(string_hash) != this->animations.end()) {
+            // We already have the asset
+            return string_hash;
+        }
+        else {
+            // We don't have the asset
+            int animCount = 0;
+            ModelAnimation* anims = LoadModelAnimations(asset_name.data(), &animCount);
+
+            this->animations[string_hash] = std::make_pair(anims,animCount);
+            return string_hash;
+        }
+    } catch (std::exception& e) {
+        std::cout << e.what() << std::endl;
+        return std::nullopt;
     }
 }
 
 
-std::optional<
-    std::reference_wrapper<std::pair<ModelAnimation*, RlClone::ModelAnimationCount>>>
+std::optional<std::reference_wrapper<std::pair<ModelAnimation*, RlClone::ModelAnimationCount>>>
 RlClone::AssetManager::GetModelAnimation(std::uint32_t model_animation_id) {
     if (auto iterator = this->animations.find(model_animation_id);
         iterator != this->animations.end()) {
@@ -135,14 +161,27 @@ void RlClone::AssetManager::DeleteModelAnimation(std::uint32_t model_animation_i
 }
 
 
-std::uint32_t RlClone::AssetManager::PutShader(Shader&& shader) {
-    if (this->last_shader_index == std::numeric_limits<std::uint32_t>::max()) {
-        throw std::runtime_error(
-            "Maximum shader count reached."); // Might remove this later this is very problematic
-    }
-    else {
-        this->shaders[++last_shader_index] = shader;
-        return last_shader_index;
+std::optional<std::uint32_t> RlClone::AssetManager::PutShader(
+    const std::string frag_shader_name, const std::string vert_shader_name) {
+    try {
+        auto string_hash =
+            entt::hashed_string((frag_shader_name + vert_shader_name).data()).value();
+
+        if (this->shaders.find(string_hash) != this->shaders.end()) {
+            // We already have the asset
+            return string_hash;
+        }
+        else {
+            Shader shader = LoadShader(
+                (vert_shader_name == "" ? 0 : vert_shader_name.data()),
+                (frag_shader_name == "" ? 0 : frag_shader_name.data()));
+
+            this->shaders[string_hash] = std::move(shader);
+            return string_hash;
+        }
+    } catch (std::exception& e) {
+        std::cout << e.what() << std::endl;
+        return std::nullopt;
     }
 }
 

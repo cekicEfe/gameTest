@@ -31,8 +31,10 @@ set(CoreDependencies Jolt raylib glfw)
 
 set(CoreIncludeDirs
     ${CMAKE_SOURCE_DIR}/src/
-    ${CMAKE_SOURCE_DIR}/src/game/
     ${CMAKE_SOURCE_DIR}/src/core/physics/
+    
+    ${CMAKE_SOURCE_DIR}/src/game/
+    ${CMAKE_SOURCE_DIR}/src/game/systems
     ${CMAKE_SOURCE_DIR}/src/game/components/
     ${CMAKE_SOURCE_DIR}/src/game/entity_builders/
     
@@ -47,8 +49,15 @@ set(EngineCoreFiles
     core/physics/Layers.hpp
     core/physics/Layers.cpp
     
-    game/systems/CoreSystems.cpp
-    game/systems/CoreSystems.hpp
+
+    game/systems/PhysicsSystem.cpp
+    game/systems/PhysicsSystem.hpp
+
+    
+    game/systems/Render3DSystem.cpp
+    game/systems/Render3DSystem.hpp
+
+        
     game/components/CoreComponents.hpp
     game/entity_builders/AbstractCar.hpp
     game/AssetManager.hpp

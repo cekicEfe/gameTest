@@ -1,12 +1,10 @@
 #ifndef CORE_COMPONENTS_HPP
 #define CORE_COMPONENTS_HPP
 
-
 #include <Jolt/Jolt.h>
 #include <Jolt/Math/Quat.h>
 #include <Jolt/Math/Vec3.h>
 #include <Jolt/Physics/Body/BodyID.h> // For BodyID
-#include <Jolt/Physics/PhysicsSettings.h>
 #include <Jolt/Physics/PhysicsSystem.h> // For JPH::PhysicsSystem
 
 // For ecs
@@ -65,10 +63,14 @@ struct MainCameraComponent {
     Camera3D camera_part;
 };
 
+  
+struct MouseStateComponent {
+    float x, y;
+    float dx, dy;
+};
 
-// These components works as a toggle
-struct Renderable {};
-struct Updatable {};
+  
+struct UpdatableTagComponent {};
 
 
 }; // namespace RlClone

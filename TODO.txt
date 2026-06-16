@@ -1,2 +1,1 @@
-AssetManager is not deallocation assets properly when it deconstructs
-    make it happen
+Do the demo for the love of sweet god

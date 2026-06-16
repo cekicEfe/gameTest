@@ -4,20 +4,23 @@
 // For the physics backend
 #include <core/physics/GamePhysicsBackend.hpp>
 
-// For entity component system
-#include <entt/entt.hpp>
-
 // For asset manager
 #include <game/AssetManager.hpp>
 
-// For ecs core systems
-#include <game/systems/CoreSystems.hpp>
+// For Render3D System
+#include <game/systems/Render3DSystem.hpp>
 
-// For std::cout std::endl
-#include <iostream>
+// For Physics System
+#include <game/systems/PhysicsSystem.hpp>
+
+// For entity component system
+#include <entt/entt.hpp>
 
 // For rendering and audio
 #include <raylib.h>
+
+// For std::cout std::endl
+#include <iostream>
 
 
 namespace RlClone {
@@ -46,7 +49,7 @@ public:
 
     static const constexpr float delta_time = 1 / 60;
 
-
+  
     void Run();
 };
 

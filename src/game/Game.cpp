@@ -50,6 +50,7 @@ RlClone::Game::~Game() {
     std::cout << "LOG: Destroying raylib" << std::endl;
 
 
+    this->physics_system.CleanUp();
     CloseWindow(); // Close window and OpenGL context
 
 
@@ -72,16 +73,16 @@ void RlClone::Game::Run() {
 
 
         auto view = this->entity_registry.view<RlClone::MainCameraComponent>();
-        for (auto& camera_entity : view) {
+        
+        for (auto& camera_entity : view) {          
             Camera3D& camera_part =
                 this->entity_registry.get<RlClone::MainCameraComponent>(camera_entity).camera_part;
-            UpdateCamera(&camera_part, CAMERA_FREE);
-
+            
             {
                 BeginMode3D(camera_part);
 
 
-                this->render_3d_system.Update(RlClone::Game::delta_time);
+                this->render_3d_system.Render();
                 DrawCubeWires((Vector3){0.0, 0.0, 0.0}, 1.0f, 1.0f, 1.0f, WHITE);
                 DrawGrid(100, 1);
 
