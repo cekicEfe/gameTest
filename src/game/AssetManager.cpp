@@ -37,7 +37,7 @@ std::optional<std::uint32_t> RlClone::AssetManager::PutModel(const std::string a
             this->models[string_hash] = std::move(model);
             return string_hash;
         }
-    } catch (std::exception &e) {
+    } catch (std::exception& e) {
         std::cout << e.what() << std::endl;
         return std::nullopt;
     }
@@ -126,7 +126,7 @@ RlClone::AssetManager::PutModelAnimation(const std::string asset_name) {
             int animCount = 0;
             ModelAnimation* anims = LoadModelAnimations(asset_name.data(), &animCount);
 
-            this->animations[string_hash] = std::make_pair(anims,animCount);
+            this->animations[string_hash] = std::make_pair(anims, animCount);
             return string_hash;
         }
     } catch (std::exception& e) {
@@ -162,7 +162,7 @@ void RlClone::AssetManager::DeleteModelAnimation(std::uint32_t model_animation_i
 
 
 std::optional<std::uint32_t> RlClone::AssetManager::PutShader(
-    const std::string frag_shader_name, const std::string vert_shader_name) {
+    const std::string vert_shader_name, const std::string frag_shader_name) {
     try {
         auto string_hash =
             entt::hashed_string((frag_shader_name + vert_shader_name).data()).value();

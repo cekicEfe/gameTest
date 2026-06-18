@@ -11,7 +11,6 @@ void RlClone::Render3DSystem::Render() {
     // If out asset_manager_exists try to render objects
     if (auto* asset_manager_ptr =
             this->entity_registry_ref.get().ctx().find<RlClone::AssetManager>()) {
-      
         // We get the asset_manager
         auto& asset_manager = *asset_manager_ptr;
 
@@ -79,16 +78,28 @@ void RlClone::Render3DSystem::Render() {
             (*current_maybe_model_ref).get().materials[0].maps[MATERIAL_MAP_DIFFUSE].texture =
                 (*current_maybe_texture_ref).get();
 
-            // Draw the model
-            DrawModel(
+            JPH::Quat quat_normalized = transform_comp.rotation.Normalized();
+            JPH::Vec3 rotation_axis;
+            float rotation_angle_rad;
+            quat_normalized.GetAxisAngle(rotation_axis, rotation_angle_rad);
+
+            DrawModelEx(
                 *current_maybe_model_ref,
                 (Vector3){transform_comp.position.GetX(),
                           transform_comp.position.GetY(),
                           transform_comp.position.GetZ()},
-                transform_comp.scale,
+                (Vector3){
+                  rotation_axis.GetX(),
+                  rotation_axis.GetY(),
+                  rotation_axis.GetZ()},
+                  rotation_angle_rad * RAD2DEG,
+                (Vector3){transform_comp.scale.GetX(),
+                          transform_comp.scale.GetY(),
+                          transform_comp.scale.GetZ()},
                 WHITE);
         }
-    }else {
-      throw std::runtime_error("[[[FATAL]]]Could not find asset manager");
+    }
+    else {
+        throw std::runtime_error("[[[FATAL]]]Could not find asset manager");
     }
 }

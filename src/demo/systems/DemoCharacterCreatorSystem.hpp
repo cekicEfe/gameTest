@@ -10,12 +10,13 @@
 #include <Jolt/Physics/Body/BodyInterface.h> // For JPH::BodyInterface
 
 #include <Jolt/Physics/Collision/ObjectLayer.h>
-#include <Jolt/Physics/Character/CharacterVirtual.h>
-
-#include <Jolt/Physics/Collision/Shape/CapsuleShape.h>
-
-#include <Jolt/Physics/Collision/Shape/BoxShape.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
+
+#include <Jolt/Physics/Character/CharacterVirtual.h>
+#include <Jolt/Physics/Collision/Shape/CapsuleShape.h>
+#include <Jolt/Physics/Collision/Shape/SphereShape.h>
+#include <Jolt/Physics/Collision/Shape/BoxShape.h>
+
 
 // For Entity Component System
 #include <entt/entt.hpp>
@@ -35,11 +36,14 @@
 // For physics engine
 #include <core/physics/GamePhysicsBackend.hpp>
 
+// For Layers
+#include <core/physics/Layers.hpp>
+
 // For base components
 #include <game/components/CoreComponents.hpp>
 
 // For demo compononets
-#include <game/components/DemoCharacterComponents.hpp>
+#include <demo/components/DemoCharacterComponents.hpp>
 
 
 namespace RlClone::Demo {

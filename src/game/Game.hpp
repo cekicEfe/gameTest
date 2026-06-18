@@ -1,16 +1,15 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-// For the physics backend
-#include <core/physics/GamePhysicsBackend.hpp>
-
 // For asset manager
 #include <game/AssetManager.hpp>
 
-// For Render3D System
-#include <game/systems/Render3DSystem.hpp>
+// For the physics backend
+#include <core/physics/GamePhysicsBackend.hpp>
 
-// For Physics System
+#include <game/systems/Render3DSystem.hpp>
+#include <game/systems/TransformToKinematicSyncer.hpp>
+#include <game/systems/PhysicsToTransformSyncer.hpp>
 #include <game/systems/PhysicsSystem.hpp>
 
 // For entity component system
@@ -22,6 +21,9 @@
 // For std::cout std::endl
 #include <iostream>
 
+// For demo
+#include <demo/systems/DemoCharacterCreatorSystem.hpp>
+#include <demo/systems/DemoCharacterControllerSystem.hpp>
 
 namespace RlClone {
 
@@ -30,10 +32,12 @@ class Game {
 protected:
     entt::registry entity_registry;
 
-  
     RlClone::Render3DSystem render_3d_system;
     RlClone::PhysicsSystem physics_system;
-
+    RlClone::TransformToKinematicSyncer transform_to_kinematic_syncer;
+    RlClone::PhysicsToTransformSyncer physics_to_transform_syncer;
+    RlClone::Demo::DemoCharacterCreatorSystem demo_creator_system;
+    RlClone::Demo::DemoCharacterControllerSystem demo_controller_system;
   
 public:
 
@@ -56,7 +60,7 @@ public:
     ~Game();
 
 
-    static const constexpr float delta_time = 1 / 60;
+    static const constexpr float delta_time = 1.0f/60.0f;
 
     /*!
      * \brief Runs the game loop

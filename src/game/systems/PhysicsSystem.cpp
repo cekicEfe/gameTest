@@ -14,11 +14,14 @@ void RlClone::PhysicsSystem::Update(const float delta_time) {
                                         .find<RlClone::PhysicsBackend::GamePhysicsBackend>()) {
         auto& physics_backend = *physics_backend_ptr;
 
+        
         physics_backend.GetPhysicsSystem().Update(
             delta_time,
             1,
             &physics_backend.GetTempAllocator(),
             &physics_backend.GetJobSystemThreadPool());
+
+        
     }
     else {
         throw std::runtime_error("[[[FATAL]]] Could not find the physics backend");

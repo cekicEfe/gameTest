@@ -34,10 +34,15 @@ set(CoreIncludeDirs
     ${CMAKE_SOURCE_DIR}/src/core/physics/
     
     ${CMAKE_SOURCE_DIR}/src/game/
-    ${CMAKE_SOURCE_DIR}/src/game/systems
+    ${CMAKE_SOURCE_DIR}/src/game/systems/
     ${CMAKE_SOURCE_DIR}/src/game/components/
     ${CMAKE_SOURCE_DIR}/src/game/entity_builders/
-    
+
+    ${CMAKE_SOURCE_DIR}/src/demo/    
+    ${CMAKE_SOURCE_DIR}/src/demo/systems/
+    ${CMAKE_SOURCE_DIR}/src/demo/components/
+    ${CMAKE_SOURCE_DIR}/src/demo/entity_builders/
+        
     $ENV{JOLT_REPO}/
 )
 
@@ -50,18 +55,29 @@ set(EngineCoreFiles
     core/physics/Layers.cpp
     
 
-    game/systems/PhysicsSystem.cpp
-    game/systems/PhysicsSystem.hpp
-
+    demo/systems/DemoCharacterCreatorSystem.cpp
+    demo/systems/DemoCharacterCreatorSystem.hpp
+    demo/systems/DemoCharacterControllerSystem.cpp
+    demo/systems/DemoCharacterControllerSystem.hpp
+    demo/components/DemoCharacterComponents.hpp
     
+    
+    game/systems/PhysicsSystem.hpp
+    game/systems/PhysicsSystem.cpp    
+    game/systems/PhysicsToTransformSyncer.hpp
+    game/systems/PhysicsToTransformSyncer.cpp
+    game/systems/TransformToKinematicSyncer.hpp
+    game/systems/TransformToKinematicSyncer.cpp
+    game/systems/Render3DSystem.hpp    
     game/systems/Render3DSystem.cpp
-    game/systems/Render3DSystem.hpp
 
-        
+            
     game/components/CoreComponents.hpp
     game/entity_builders/AbstractCar.hpp
     game/AssetManager.hpp
-    game/AssetManager.cpp        
+    game/AssetManager.cpp
+
+    
     game/Game.hpp
     game/Game.cpp
 )

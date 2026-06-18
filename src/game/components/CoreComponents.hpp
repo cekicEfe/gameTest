@@ -22,18 +22,21 @@ namespace RlClone {
 
 struct TransformComponent {
     JPH::RVec3 position;
-    JPH::Quat rotation;
-    float scale;
-};
-
-
-struct PhysicsComponent {
-    JPH::BodyID body_id;
+    JPH::Quat rotation = JPH::Quat::sIdentity();
+    JPH::Vec3 scale;
 };
 
 
 struct VelocityComponent {
     JPH::Vec3 velocity_vector;
+};
+
+
+struct KinematicTag {};
+
+
+struct PhysicsComponent {
+    JPH::BodyID body_id;
 };
 
 
@@ -62,15 +65,6 @@ struct ModelAnimationComponent {
 struct MainCameraComponent {
     Camera3D camera_part;
 };
-
-  
-struct MouseStateComponent {
-    float x, y;
-    float dx, dy;
-};
-
-  
-struct UpdatableTagComponent {};
 
 
 }; // namespace RlClone
