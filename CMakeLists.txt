@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.20)
     
 project(RevEngine)
 
-        
+    
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -17,7 +17,8 @@ SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pg")
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -g")
 SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -g")
-    
+
+        
 
 # For now we include Jolt like this    
 add_subdirectory($ENV{JOLT_REPO}/Build/ include/Jolt)    
@@ -34,18 +35,15 @@ set(CoreIncludeDirs
     ${CMAKE_SOURCE_DIR}/src/core/physics/
     
     ${CMAKE_SOURCE_DIR}/src/game/
+    ${CMAKE_SOURCE_DIR}/src/game/utils/        
     ${CMAKE_SOURCE_DIR}/src/game/systems/
     ${CMAKE_SOURCE_DIR}/src/game/components/
     ${CMAKE_SOURCE_DIR}/src/game/entity_builders/
-
-    ${CMAKE_SOURCE_DIR}/src/demo/    
-    ${CMAKE_SOURCE_DIR}/src/demo/systems/
-    ${CMAKE_SOURCE_DIR}/src/demo/components/
-    ${CMAKE_SOURCE_DIR}/src/demo/entity_builders/
         
     $ENV{JOLT_REPO}/
 )
 
+    
 set(EngineCoreFiles
     core/physics/GamePhysicsBackend.hpp
     core/physics/GamePhysicsBackend.cpp
@@ -53,14 +51,10 @@ set(EngineCoreFiles
     core/physics/Listener.cpp    
     core/physics/Layers.hpp
     core/physics/Layers.cpp
-    
 
-    demo/systems/DemoCharacterCreatorSystem.cpp
-    demo/systems/DemoCharacterCreatorSystem.hpp
-    demo/systems/DemoCharacterControllerSystem.cpp
-    demo/systems/DemoCharacterControllerSystem.hpp
-    demo/components/DemoCharacterComponents.hpp
-    
+
+    game/utils/Utils.hpp
+    game/utils/Utils.cpp
     
     game/systems/PhysicsSystem.hpp
     game/systems/PhysicsSystem.cpp    
@@ -70,13 +64,13 @@ set(EngineCoreFiles
     game/systems/TransformToKinematicSyncer.cpp
     game/systems/Render3DSystem.hpp    
     game/systems/Render3DSystem.cpp
-
-            
+    game/systems/VelocitySystem.hpp
+    game/systems/VelocitySystem.cpp
+    
     game/components/CoreComponents.hpp
     game/entity_builders/AbstractCar.hpp
     game/AssetManager.hpp
     game/AssetManager.cpp
-
     
     game/Game.hpp
     game/Game.cpp

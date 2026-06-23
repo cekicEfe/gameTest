@@ -33,10 +33,12 @@ void RlClone::PhysicsSystem::CleanUp() {
     if (auto* physics_backend_ptr = this->entity_registry_ref.get()
                                         .ctx()
                                         .find<RlClone::PhysicsBackend::GamePhysicsBackend>()) {
+      
         auto& physics_backend = *physics_backend_ptr;
         JPH::BodyInterface& body_interface = physics_backend.GetPhysicsSystem().GetBodyInterface();
 
         auto view = this->entity_registry_ref.get().view<RlClone::PhysicsComponent>();
+        
         for (auto entity : view) {
             auto& body_id = this->entity_registry_ref.get().get<RlClone::PhysicsComponent>(entity);
             if (body_interface.IsAdded(body_id.body_id)) {

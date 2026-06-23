@@ -1,13 +1,10 @@
 #ifndef PHYSICS_TO_TRANSFORM_SYNCER_HPP
 #define PHYSICS_TO_TRANSFORM_SYNCER_HPP
 
-// For Entity Component System
 #include <entt/entt.hpp>
 
-// For reference_wrapper
 #include <functional>
 
-// For core components which is a natural prequisite of the ecs
 #include <core/physics/GamePhysicsBackend.hpp>
 #include <game/components/CoreComponents.hpp>
 

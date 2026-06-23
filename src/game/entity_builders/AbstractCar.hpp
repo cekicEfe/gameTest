@@ -60,8 +60,7 @@ struct AbstractCarTemplate {
     bool four_wheel_drive = false;
     bool anti_rollbar = true;
     bool limited_slip_differentials = true;
-    bool override_gravity =
-        false; ///< If true, gravity is overridden to always oppose the ground normal
+    bool override_gravity = false;
     float max_engine_torque = 500.0f;
     float clutch_strength = 10.0f;
 

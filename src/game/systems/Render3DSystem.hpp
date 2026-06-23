@@ -48,8 +48,6 @@ public:
      * Must be called inside
      * BeginMode3D,EndMode3D bracket
      *
-     * Throws exception if it cannot find asset manager
-     * in the entity_registry.ctx()
      */
     void Render();
 };

@@ -30,8 +30,6 @@ public:
      * Must have
      * RlClone::PhysicsComponent,
      *
-     * Throws exception if it cannot find physics backend
-     * in the entity_registry.ctx()
      */
     void Update(const float delta_time);
 
@@ -44,8 +42,6 @@ public:
      * Must have
      * RlClone::PhysicsComponent,
      *
-     * Throws exception if it cannot find physics backend
-     * in the entity_registry.ctx()
      */
     void CleanUp();
 };

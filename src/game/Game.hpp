@@ -11,6 +11,7 @@
 #include <game/systems/TransformToKinematicSyncer.hpp>
 #include <game/systems/PhysicsToTransformSyncer.hpp>
 #include <game/systems/PhysicsSystem.hpp>
+#include <game/systems/VelocitySystem.hpp>
 
 // For entity component system
 #include <entt/entt.hpp>
@@ -20,10 +21,6 @@
 
 // For std::cout std::endl
 #include <iostream>
-
-// For demo
-#include <demo/systems/DemoCharacterCreatorSystem.hpp>
-#include <demo/systems/DemoCharacterControllerSystem.hpp>
 
 namespace RlClone {
 
@@ -36,8 +33,7 @@ protected:
     RlClone::PhysicsSystem physics_system;
     RlClone::TransformToKinematicSyncer transform_to_kinematic_syncer;
     RlClone::PhysicsToTransformSyncer physics_to_transform_syncer;
-    RlClone::Demo::DemoCharacterCreatorSystem demo_creator_system;
-    RlClone::Demo::DemoCharacterControllerSystem demo_controller_system;
+    RlClone::VelocitySystem velocity_system;
   
 public:
 
@@ -49,7 +45,7 @@ public:
      * Creates asset manager
      * Creates the ecs Systems
      * Creates the main camera
-     * 
+     * The game is ran on 60 fps static
      */
     Game(
         const uint AllocatorMaxSize = (1024 * 1024 * 10),

@@ -28,7 +28,7 @@ struct TransformComponent {
 
 
 struct VelocityComponent {
-    JPH::Vec3 velocity_vector;
+    JPH::Vec3 velocity;
 };
 
 
