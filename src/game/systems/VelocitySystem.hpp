@@ -5,8 +5,8 @@
 
 #include <functional>
 
-#include <core/physics/GamePhysicsBackend.hpp>
-#include <game/components/CoreComponents.hpp>
+#include "GamePhysicsBackend.hpp"
+#include "CoreComponents.hpp"
 
 
 namespace RlClone {
@@ -18,9 +18,7 @@ private:
 public:
     VelocitySystem(entt::registry& entity_registry_ref);
 
-
     ~VelocitySystem();
-
 
     void Update(const float delta_time);
 };

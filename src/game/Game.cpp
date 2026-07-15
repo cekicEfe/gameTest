@@ -1,4 +1,4 @@
-#include <game/Game.hpp>
+#include "Game.hpp"
 
 
 RlClone::Game::Game(
@@ -9,7 +9,6 @@ RlClone::Game::Game(
     const uint cMaxContactConstraints)
     // Create the systems here
     : render_3d_system(this->entity_registry)
-    , physics_system(this->entity_registry)
     , transform_to_kinematic_syncer(this->entity_registry)
     , physics_to_transform_syncer(this->entity_registry)
     , velocity_system(this->entity_registry) {
@@ -23,7 +22,7 @@ RlClone::Game::Game(
     HideCursor();
     DisableCursor();
 
-    // Inject game physics to the registry
+    // Inject game physics backend to the registry
     this->entity_registry.ctx().emplace<RlClone::PhysicsBackend::GamePhysicsBackend>(
         AllocatorMaxSize,
         cMaxBodies,
@@ -53,16 +52,27 @@ RlClone::Game::~Game() {
     std::cout << "LOG: Destroying game object" << std::endl;
     std::cout << "LOG: Destroying raylib" << std::endl;
 
-    this->physics_system.CleanUp();
+    // Destroy physics objects
+    auto& physics_system_backend =
+        this->entity_registry.ctx().get<RlClone::PhysicsBackend::GamePhysicsBackend>();
+    JPH::BodyInterface& body_interface =
+        physics_system_backend.GetPhysicsSystem().GetBodyInterface();
+    auto view = this->entity_registry.view<RlClone::PhysicsComponent>();
+    for (auto entity : view) {
+        auto& body_id = this->entity_registry.get<RlClone::PhysicsComponent>(entity);
+        if (body_interface.IsAdded(body_id.body_id)) {
+            body_interface.RemoveBody(body_id.body_id);
+            body_interface.DestroyBody(body_id.body_id);
+        }
+        else {
+            body_interface.DestroyBody(body_id.body_id);
+        }
+    }
 
-    if (auto* ptr = this->entity_registry.ctx().find<RlClone::PhysicsBackend::GamePhysicsBackend>())
-        this->entity_registry.ctx().erase<RlClone::PhysicsBackend::GamePhysicsBackend>();
-
-    if (auto* ptr = this->entity_registry.ctx().find<RlClone::AssetManager>())
-        this->entity_registry.ctx().erase<RlClone::AssetManager>();
-
-    if (auto* ptr = this->entity_registry.ctx().find<RlClone::MainCameraComponent>())
-        this->entity_registry.ctx().erase<RlClone::MainCameraComponent>();
+    // Destroy context objects
+    this->entity_registry.ctx().erase<RlClone::PhysicsBackend::GamePhysicsBackend>();
+    this->entity_registry.ctx().erase<RlClone::AssetManager>();
+    this->entity_registry.ctx().erase<RlClone::MainCameraComponent>();
 
     CloseWindow(); // Close window and OpenGL context
 
@@ -75,22 +85,42 @@ void RlClone::Game::Run() {
     while (!WindowShouldClose()) {
         this->velocity_system.Update(RlClone::Game::delta_time);
         this->transform_to_kinematic_syncer.Update(RlClone::Game::delta_time);
-        this->physics_system.Update(RlClone::Game::delta_time);
+
+        // Get physics backend
+        auto& physics_system_backend =
+            this->entity_registry.ctx().get<RlClone::PhysicsBackend::GamePhysicsBackend>();
+
+        // Update all physics objects
+        physics_system_backend.GetPhysicsSystem().Update(
+            delta_time,
+            1,
+            &physics_system_backend.GetTempAllocator(),
+            &physics_system_backend.GetJobSystemThreadPool());
+
         this->physics_to_transform_syncer.Update();
 
+        // Start drawing after here
         BeginDrawing();
         ClearBackground(BLACK);
 
+        // Render UIs and 2d objects
         DrawText(TextFormat("Hello world"), 20, 20, 20, RED);
 
-        // Rendering 3d objects. But first we need the camera
-        // If we don't have the camera pass it
-        if (auto* main_camera = this->entity_registry.ctx().find<RlClone::MainCameraComponent>()) {
-            Camera3D& camera_part = main_camera->camera_part;
+        // Render 3d objects.
+        {
+            auto& main_camera = this->entity_registry.ctx().get<RlClone::MainCameraComponent>();
+            Camera3D& camera_part = main_camera.camera_part;
             UpdateCamera(&camera_part, CAMERA_FREE);
             {
                 BeginMode3D(camera_part);
                 this->render_3d_system.Render();
+
+                DrawGrid(1000.0f, 1.0f);
+
+                DrawLine3D((Vector3){0.0f, 0.0f, 0.0f}, (Vector3){500.0f, 0.0f, 0.0f}, RED);
+                DrawLine3D((Vector3){0.0f, 0.0f, 0.0f}, (Vector3){0.0f, 500.0f, 0.0f}, GREEN);
+                DrawLine3D((Vector3){0.0f, 0.0f, 0.0f}, (Vector3){0.0f, 0.0f, 500.0f}, BLUE);
+
                 EndMode3D();
             }
         }

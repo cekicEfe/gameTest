@@ -7,7 +7,7 @@ int main(int argc, char** argv) {
         RlClone::Game game;
         game.Run();
     } catch (std::exception &e) {
-        std::cout << "Something went very wrong" << std::endl;
+        std::cout << "Something went wrong" << std::endl;
         std::cout << e.what() << std::endl;
         // Cannot continue abort
         return 1;

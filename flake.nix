@@ -31,8 +31,12 @@
             CXX_COMPILER = "${pkgs.gcc}/bin/g++";
 
             JOLT_REPO = JOLT_REPO;
-
+    
             nativeBuildInputs = with pkgs; [
+              SDL2
+              spirv-tools
+
+              raylib
               gdb
               cmake
               ninja
@@ -44,6 +48,7 @@
               perf
               clang-uml
 
+    
               pkg-config
               vulkan-loader
               vulkan-tools
@@ -53,10 +58,13 @@
 
             buildInputs = with pkgs; [
               JOLT_REPO
-
+    
+              ogre
               recastnavigation
+              SDL2
+              spirv-tools
               raylib
-              raygui
+              
               entt
               glm
               glfw
@@ -70,12 +78,12 @@
             ];
 
             LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
+              pkgs.ogre 
               pkgs.pkg-config
               pkgs.vulkan-loader
               pkgs.vulkan-tools
               pkgs.vulkan-validation-layers
               pkgs.directx-shader-compiler
-              pkgs.raylib
               pkgs.entt
               pkgs.glm
               pkgs.glfw
@@ -119,7 +127,7 @@
               pkgs.vulkan-validation-layers
               pkgs.directx-shader-compiler
 
-              pkgs.raygui
+              pkgs.ogre
               pkgs.raylib
               pkgs.entt
               pkgs.glm

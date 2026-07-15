@@ -8,8 +8,8 @@
 #include <functional>
 
 // For core components which is a natural prequisite of the ecs
-#include <core/physics/GamePhysicsBackend.hpp>
-#include <game/components/CoreComponents.hpp>
+#include "GamePhysicsBackend.hpp"
+#include "CoreComponents.hpp"
 
 
 namespace RlClone {

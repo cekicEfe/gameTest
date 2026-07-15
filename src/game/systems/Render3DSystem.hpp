@@ -14,10 +14,10 @@
 #include <raylib.h>
 
 // For asset manager
-#include <game/AssetManager.hpp>
+#include "AssetManager.hpp"
 
 // For core components which is a natural prequisite of the ecs
-#include <game/components/CoreComponents.hpp>
+#include "CoreComponents.hpp"
 
 
 namespace RlClone {
@@ -34,7 +34,7 @@ public:
     /*!
      * \brief Renders objects that meets certain requirements
      * * \details
-     * Renders objects that have the components :
+     * Renders objects that have the components:
      *
      * Must have
      * RlClone::TransformComponent,
@@ -46,8 +46,10 @@ public:
      * RlClone::ModelAnimationComponent
      *
      * Must be called inside
-     * BeginMode3D,EndMode3D bracket
+     * bracket BeginMode3D, EndMode3D bracket
      *
+     * During the call the system sorts components based on their shader ids
+     * to optimize the render call.
      */
     void Render();
 };

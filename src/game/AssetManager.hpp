@@ -23,14 +23,10 @@
 // For asset hashing
 #include <entt/entt.hpp>
 
-// For renderer models
+// For Rendering
 #include <raylib.h>
 
 #include <string>
-
-
-// This will be a problem if we want to port this shi to the Android and web
-#define GLSL_SHADER_VERSION 330
 
 
 namespace RlClone {

@@ -16,7 +16,6 @@
 // For rendering
 #include <raylib.h>
 
-
 namespace RlClone {
 
 
@@ -65,6 +64,17 @@ struct ModelAnimationComponent {
 struct MainCameraComponent {
     Camera3D camera_part;
 };
+
+
+struct ControlComponent {
+    bool forward = false;
+    bool backward = false;
+    bool left = false;
+    bool right = false;
+};
+
+  
+struct CarTag {};
 
 
 }; // namespace RlClone

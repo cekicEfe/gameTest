@@ -1,4 +1,4 @@
-#include <core/physics/GamePhysicsBackend.hpp>
+#include "GamePhysicsBackend.hpp"
 
 
 void RlClone::PhysicsBackend::TraceImpl(const char* inFMT, ...) {
@@ -30,9 +30,10 @@ bool RlClone::PhysicsBackend::AssertFailedImpl(
 
 RlClone::PhysicsBackend::GamePhysicsBackend::GamePhysicsBackendContext::
     GamePhysicsBackendContext() {
-    // Initialize the Factory
+
     std::cout << "LOG: Initializing GamePhysicsBackendContext" << std::endl;
 
+    // Initialize the Factory
     JPH::RegisterDefaultAllocator();
     JPH::Factory::sInstance = new JPH::Factory();
     JPH::RegisterTypes();

@@ -19,15 +19,13 @@ SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -g")
 SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -g")
 
         
-
-# For now we include Jolt like this    
-add_subdirectory($ENV{JOLT_REPO}/Build/ include/Jolt)    
+add_subdirectory($ENV{JOLT_REPO}/Build include/)    
 target_compile_options(Jolt PRIVATE
     -Wno-array-bounds
 )
 
     
-set(CoreDependencies Jolt raylib glfw)    
+set(CoreDependencies Jolt glfw raylib)     
 
 
 set(CoreIncludeDirs
@@ -35,11 +33,12 @@ set(CoreIncludeDirs
     ${CMAKE_SOURCE_DIR}/src/core/physics/
     
     ${CMAKE_SOURCE_DIR}/src/game/
-    ${CMAKE_SOURCE_DIR}/src/game/utils/        
+    
     ${CMAKE_SOURCE_DIR}/src/game/systems/
+    
     ${CMAKE_SOURCE_DIR}/src/game/components/
     ${CMAKE_SOURCE_DIR}/src/game/entity_builders/
-        
+            
     $ENV{JOLT_REPO}/
 )
 
@@ -51,13 +50,6 @@ set(EngineCoreFiles
     core/physics/Listener.cpp    
     core/physics/Layers.hpp
     core/physics/Layers.cpp
-
-
-    game/utils/Utils.hpp
-    game/utils/Utils.cpp
-    
-    game/systems/PhysicsSystem.hpp
-    game/systems/PhysicsSystem.cpp    
     game/systems/PhysicsToTransformSyncer.hpp
     game/systems/PhysicsToTransformSyncer.cpp
     game/systems/TransformToKinematicSyncer.hpp
@@ -66,12 +58,14 @@ set(EngineCoreFiles
     game/systems/Render3DSystem.cpp
     game/systems/VelocitySystem.hpp
     game/systems/VelocitySystem.cpp
-    
+    game/systems/PowerCarCreatorSystem.hpp
+    game/systems/PowerCarCreatorSystem.cpp
     game/components/CoreComponents.hpp
-    game/entity_builders/AbstractCar.hpp
+    game/entity_builders/AbstractCar.hpp    
+    game/entity_builders/PowerCarBuilder.hpp
+    game/entity_builders/PowerCarBuilder.cpp
     game/AssetManager.hpp
     game/AssetManager.cpp
-    
     game/Game.hpp
     game/Game.cpp
 )

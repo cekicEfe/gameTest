@@ -9,13 +9,13 @@ RlClone::PhysicsToTransformSyncer::~PhysicsToTransformSyncer() {}
 
 
 void RlClone::PhysicsToTransformSyncer::Update() {
-    // Get physics system
-    if (auto* physics_backend_ptr = this->entity_registry_ref.get()
+        // Get physics system backend
+        auto& physics_system_backend = this->entity_registry_ref.get()
                                         .ctx()
-                                        .find<RlClone::PhysicsBackend::GamePhysicsBackend>()) {
-        // Rename it why not
-        auto& physics_backend = *physics_backend_ptr;
-        auto& body_interface = physics_backend.GetPhysicsSystem().GetBodyInterface();
+          .get<RlClone::PhysicsBackend::GamePhysicsBackend>();
+
+        // Get body interface
+        auto& body_interface = physics_system_backend.GetPhysicsSystem().GetBodyInterface();
 
         // We only get the entites with transform and physics body
         // And we also make sure that the body is not kinematic
@@ -23,6 +23,7 @@ void RlClone::PhysicsToTransformSyncer::Update() {
                         .view<RlClone::TransformComponent, RlClone::PhysicsComponent>(
                             entt::exclude<RlClone::KinematicTag>);
 
+        // Update positions
         for (auto entity : view) {
             auto [transform, physics] =
                 view.get<RlClone::TransformComponent, RlClone::PhysicsComponent>(entity);
@@ -34,8 +35,4 @@ void RlClone::PhysicsToTransformSyncer::Update() {
                 transform.rotation = rot;
             }
         }
-    }
-    else {
-        throw std::runtime_error("[[[FATAL]]] Could not find the physics backend");
-    }
 }

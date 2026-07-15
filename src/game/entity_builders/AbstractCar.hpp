@@ -2,7 +2,6 @@
 #define CAR_HPP
 
 #include <Jolt/Jolt.h>
-
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Collision/CollisionCollectorImpl.h>
 #include <Jolt/Physics/Collision/Shape/BoxShape.h>
@@ -12,13 +11,13 @@
 #include <Jolt/Physics/Vehicle/WheeledVehicleController.h>
 
 // For Layer implementation
-#include <core/physics/Layers.hpp>
+#include "Layers.hpp"
 
 // For the physics backend
-#include <core/physics/GamePhysicsBackend.hpp>
+#include "GamePhysicsBackend.hpp"
 
-// For core traits
-#include <game/components/CoreComponents.hpp>
+// For core components
+#include "CoreComponents.hpp"
 
 // For Entity Component System
 #include <entt/entt.hpp>
@@ -26,9 +25,9 @@
 
 namespace RlClone {
 
-struct CarTag {};    
-  
-struct AbstractCarTemplate {
+
+class AbstractCarTemplate {
+public:
     float wheel_radius = 0.3f;
     float wheel_width = 0.1f;
     float half_vehicle_length = 2.0f;
@@ -36,7 +35,6 @@ struct AbstractCarTemplate {
     float half_vehicle_height = 0.2f;
 
 
-    JPH::RVec3 position;
     JPH::RefConst<JPH::Shape> car_shape;
     JPH::BodyCreationSettings car_body_settings;
     JPH::VehicleConstraintSettings vehicle_settings;
@@ -64,7 +62,7 @@ struct AbstractCarTemplate {
     float max_engine_torque = 500.0f;
     float clutch_strength = 10.0f;
 
-  
+
     float front_caster_angle = 0.0f;
     float front_king_pin_angle = 0.0f;
     float front_camber = 0.0f;
@@ -87,45 +85,27 @@ struct AbstractCarTemplate {
     float rear_suspension_damping = 0.5f;
 
 
-    JPH::Body* car_body; ///< The vehicle
-    JPH::Ref<JPH::VehicleConstraint> vehicle_constraint; ///< The vehicle constraint
-    JPH::Ref<JPH::VehicleCollisionTester> testers[3]; ///< Collision testers for the wheel
+    JPH::BodyID car_body;
+    JPH::Ref<JPH::VehicleConstraint> vehicle_constraint;
+    JPH::Ref<JPH::VehicleCollisionTester> testers[3];
 };
 
 
 class AbstractCarBuilder {
-protected:
-    entt::entity current_car_id = entt::null;
-
 public:
     AbstractCarBuilder();
     virtual ~AbstractCarBuilder() = 0;
-  
-    virtual void InitilizeCar() = 0;
 
-    virtual void SetWheelRadius() = 0;
-    virtual void SetWheelWidth() = 0;
-    virtual void SetWheelModel() = 0;
-  
-    virtual void SetCarHitbox() = 0;
-    virtual void SetCarPosition() = 0;
-    virtual void SetCarModel() = 0;
-  
-    virtual void SetRenderer() = 0;
-    virtual void SetUpdater() = 0;
-    virtual void SetDeconstructor() = 0;
-
-    virtual entt::entity CreateCar() = 0;
+    virtual entt::entity CreateCar(entt::registry& entity_registry) = 0;
 };
 
 
-// Optional to use 
 class AbstractCarDirector {
 public:
     AbstractCarDirector();
     virtual ~AbstractCarDirector() = 0;
 
-    virtual entt::entity Construct() = 0;
+    virtual entt::entity Construct(entt::registry& entity_registry) = 0;
 };
 
 
