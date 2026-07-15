@@ -1,15 +1,12 @@
 #ifndef LAYERS_HPP
 #define LAYERS_HPP
 
-
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/PhysicsSettings.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 
-
 #include <cstdarg>
 #include <iostream>
-
 
 namespace RlClone::PhysicsBackend {
 

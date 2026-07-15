@@ -1,5 +1,5 @@
-#ifndef CAR_HPP
-#define CAR_HPP
+#ifndef ABSTRACT_CAR_HPP
+#define ABSTRACT_CAR_HPP
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
@@ -11,13 +11,13 @@
 #include <Jolt/Physics/Vehicle/WheeledVehicleController.h>
 
 // For Layer implementation
-#include "Layers.hpp"
+#include "physics/Layers.hpp"
 
 // For the physics backend
-#include "GamePhysicsBackend.hpp"
+#include "physics/GamePhysicsBackend.hpp"
 
 // For core components
-#include "CoreComponents.hpp"
+#include "components/CoreComponents.hpp"
 
 // For Entity Component System
 #include <entt/entt.hpp>
@@ -93,8 +93,8 @@ public:
 
 class AbstractCarBuilder {
 public:
-    AbstractCarBuilder();
-    virtual ~AbstractCarBuilder() = 0;
+    AbstractCarBuilder() = default;
+    virtual ~AbstractCarBuilder() = default;
 
     virtual entt::entity CreateCar(entt::registry& entity_registry) = 0;
 };
@@ -102,8 +102,8 @@ public:
 
 class AbstractCarDirector {
 public:
-    AbstractCarDirector();
-    virtual ~AbstractCarDirector() = 0;
+    AbstractCarDirector() = default;
+    virtual ~AbstractCarDirector() = default;
 
     virtual entt::entity Construct(entt::registry& entity_registry) = 0;
 };

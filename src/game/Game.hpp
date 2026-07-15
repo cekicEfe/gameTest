@@ -1,25 +1,20 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-// For asset manager
 #include "AssetManager.hpp"
 
-// For the physics backend
-#include "GamePhysicsBackend.hpp"
+#include "entity_builders/DirectionSphereBuilder.hpp"
 
-#include "Render3DSystem.hpp"
-#include "TransformToKinematicSyncer.hpp"
-#include "PhysicsToTransformSyncer.hpp"
-#include "VelocitySystem.hpp"
+#include "physics/GamePhysicsBackend.hpp"
+#include "systems/Render3DSystem.hpp"
+#include "systems/TransformToKinematicSyncer.hpp"
+#include "systems/PhysicsToTransformSyncer.hpp"
+#include "systems/VelocitySystem.hpp"
 
-// For entity component system
 #include <entt/entt.hpp>
-
-// For rendering and audio
-
-
-// For std::cout std::endl
+#include <raylib.h>
 #include <iostream>
+
 
 namespace RlClone {
 

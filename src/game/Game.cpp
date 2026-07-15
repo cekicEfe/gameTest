@@ -43,6 +43,11 @@ RlClone::Game::Game(
     // Create main camera
     this->entity_registry.ctx().emplace<RlClone::MainCameraComponent>(camera_part);
 
+    // Test builder
+    RlClone::DirectionSphereBuilder(this->entity_registry,
+                                    {1.0f, 1.0f, 1.0f},
+                                    {1.0f, 1.0f, 1.0f});
+    
     std::cout << "LOG: Initialized raylib" << std::endl;
     std::cout << "LOG: Created game object successfully" << std::endl;
 }

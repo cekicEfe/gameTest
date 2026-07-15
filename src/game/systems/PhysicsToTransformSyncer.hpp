@@ -5,8 +5,8 @@
 
 #include <functional>
 
-#include "GamePhysicsBackend.hpp"
-#include "CoreComponents.hpp"
+#include "physics/GamePhysicsBackend.hpp"
+#include "components/CoreComponents.hpp"
 
 
 namespace RlClone {

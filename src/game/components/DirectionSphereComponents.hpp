@@ -5,9 +5,9 @@
 
 namespace RlClone {
 
-std::string DIRECTION_SPHERE_MODEL_PATH = "resources/models/direction_sphere.obj";
-std::string DIRECTION_SPHERE_TEXTURE_PATH = "resources/models/SphereTexture.png";
-o
+inline const std::string DIRECTION_SPHERE_MODEL_PATH = "resources/models/direction_sphere/direction_sphere.obj";
+inline const std::string DIRECTION_SPHERE_TEXTURE_PATH = "resources/models/direction_sphere/SphereTexture.png";
+
 } // namespace RlClone
 
 #endif

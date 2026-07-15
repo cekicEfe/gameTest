@@ -1,4 +1,4 @@
-#include <game/Game.hpp> // For RlClone::App
+#include "Game.hpp" // For RlClone::App
 #include <exception> // For std::exception
 #include <iostream> // For std::cout and std::endl
 

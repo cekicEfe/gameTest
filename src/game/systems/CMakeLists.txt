@@ -1,0 +1,12 @@
+target_sources(RevEngine
+    PRIVATE
+    PhysicsToTransformSyncer.cpp
+    PhysicsToTransformSyncer.hpp
+    PowerCarCreatorSystem.cpp
+    PowerCarCreatorSystem.hpp
+    Render3DSystem.cpp
+    Render3DSystem.hpp
+    TransformToKinematicSyncer.cpp
+    TransformToKinematicSyncer.hpp
+    VelocitySystem.cpp
+    VelocitySystem.hpp)

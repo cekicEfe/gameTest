@@ -17,7 +17,7 @@
 #include "AssetManager.hpp"
 
 // For core components which is a natural prequisite of the ecs
-#include "CoreComponents.hpp"
+#include "components/CoreComponents.hpp"
 
 
 namespace RlClone {
