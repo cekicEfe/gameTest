@@ -5,8 +5,8 @@
 namespace RlClone {
 
   
-inline const std::string POWER_CAR_MODEL ("resources/models/power_car/uploads_files_2792345_Koenigsegg.obj");
-inline const std::string POWER_CAR_MODEL_TEXTURE ("resources/models/power_car/PowerCarTexture.png");
+inline const std::string POWER_CAR_MODEL ("media/models/power_car/uploads_files_2792345_Koenigsegg.obj");
+inline const std::string POWER_CAR_MODEL_TEXTURE ("media/models/power_car/PowerCarTexture.png");
   
   
 struct PowerCarComponent {

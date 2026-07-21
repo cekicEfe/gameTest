@@ -18,7 +18,5 @@ target_include_directories(RevEngine
 target_sources(RevEngine
     PRIVATE
     Game.hpp
-    Game.cpp
-    AssetManager.hpp
-    AssetManager.cpp)
+    Game.cpp)
         

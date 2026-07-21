@@ -13,9 +13,6 @@
 // For uint32_t
 #include <cstdint>
 
-// For rendering
-#include <raylib.h>
-
 namespace RlClone {
 
 
@@ -38,34 +35,7 @@ struct PhysicsComponent {
     JPH::BodyID body_id;
 };
 
-
-struct ModelComponent {
-    std::uint32_t model_id;
-};
-
-
-struct TextureComponent {
-    std::uint32_t texture_id;
-};
-
-
-struct ShaderComponent {
-    std::uint32_t shader_id;
-};
-
-
-struct ModelAnimationComponent {
-    std::uint32_t animation_id;
-    std::uint32_t current_animation;
-    std::uint32_t current_animation_frame;
-};
-
-
-struct MainCameraComponent {
-    Camera3D camera_part;
-};
-
-
+  
 struct BaseCarControllerComponent {
     float forward = 0.0f;
     float previous_forward =

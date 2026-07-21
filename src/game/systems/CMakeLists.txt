@@ -1,4 +1,4 @@
-add_subdirectory(power_car_systems)
+# add_subdirectory(power_car_systems)
 
     
 target_include_directories(RevEngine PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -12,8 +12,8 @@ target_sources(RevEngine
     PhysicsComponentUpdater.hpp
     PhysicsToTransformSyncer.cpp
     PhysicsToTransformSyncer.hpp
-    Render3DSystem.cpp
-    Render3DSystem.hpp
+    # Render3DSystem.cpp
+    # Render3DSystem.hpp
     TransformToKinematicSyncer.cpp
     TransformToKinematicSyncer.hpp
     VelocitySystem.cpp

@@ -14,7 +14,6 @@
 #include "physics/Layers.hpp"
 #include "physics/GamePhysicsBackend.hpp"
 
-#include "AssetManager.hpp"
 #include "components/CoreComponents.hpp"
 #include "components/PowerCarComponents.hpp"
 

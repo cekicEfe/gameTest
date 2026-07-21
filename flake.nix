@@ -16,6 +16,11 @@
 
       formatter = forEachSystem ({ pkgs, ... }: pkgs.alejandra);
 
+      packages = forEachSystem ({ pkgs }: {
+        ogre-debug = pkgs.ogre.overrideAttrs
+          (old: { buildInputs = (old.buildInputs or [ ]) ++ [ pkgs.assimp ]; });
+      });
+
       devShells = forEachSystem ({ pkgs, ... }:
         let
           JOLT_REPO = pkgs.fetchgit {
@@ -24,6 +29,12 @@
             hash = "sha256-OQ3kqpd0NBKA0e/YRNCKaSR0wKIto1mcZ+X93CuJ+Dc=";
           };
 
+          ogre-with-assimp = pkgs.ogre.overrideAttrs (old: {
+            buildInputs = (old.buildInputs or [ ]) ++ [ pkgs.assimp ];
+            cmakeFlags = (old.cmakeFlags or [ ])
+              ++ [ (pkgs.lib.cmakeBool "OGRE_BUILD_PLUGIN_ASSIMP" true) ];
+          });
+
         in {
           default = pkgs.mkShell {
 
@@ -31,13 +42,12 @@
             CXX_COMPILER = "${pkgs.gcc}/bin/g++";
 
             JOLT_REPO = JOLT_REPO;
-    
+
             nativeBuildInputs = with pkgs; [
               SDL2
               spirv-tools
 
-              ogre
-              ogre-next
+              ogre-with-assimp
               raylib
               gdb
               cmake
@@ -50,7 +60,6 @@
               perf
               clang-uml
 
-    
               pkg-config
               vulkan-loader
               vulkan-tools
@@ -60,14 +69,13 @@
 
             buildInputs = with pkgs; [
               JOLT_REPO
-    
-              ogre
-              ogre-next    
+
+              ogre-with-assimp
               recastnavigation
               SDL2
               spirv-tools
               raylib
-              
+
               entt
               glm
               glfw
@@ -81,8 +89,9 @@
             ];
 
             LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
-              pkgs.ogre
-              pkgs.ogre-next
+
+              ogre-with-assimp
+
               pkgs.pkg-config
               pkgs.vulkan-loader
               pkgs.vulkan-tools
@@ -102,56 +111,5 @@
 
           };
         });
-
-      packages = forEachSystem ({ pkgs }:
-        let
-          JOLT_REPO = pkgs.fetchgit {
-            url = "https://github.com/jrouwe/JoltPhysics";
-            tag = "v5.5.0";
-            hash = "sha256-OQ3kqpd0NBKA0e/YRNCKaSR0wKIto1mcZ+X93CuJ+Dc=";
-          };
-
-        in {
-          default = pkgs.stdenv.mkDerivation {
-            pname = "RevEngine";
-            version = "0.1.0";
-            src = ./.;
-
-            C_COMPILER = "${pkgs.gcc}/bin/gcc";
-            CXX_COMPILER = "${pkgs.gcc}/bin/g++";
-
-            JOLT_REPO = JOLT_REPO;
-
-            nativeBuildInputs = with pkgs; [ cmake ninja clang gcc ];
-            buildInputs = with pkgs; [
-              recastnavigation
-              pkgs.pkg-config
-              pkgs.vulkan-loader
-              pkgs.vulkan-tools
-              pkgs.vulkan-validation-layers
-              pkgs.directx-shader-compiler
-
-              pkgs.ogre
-              pkgs.raylib
-              pkgs.entt
-              pkgs.glm
-              pkgs.glfw
-              pkgs.vulkan-headers
-              pkgs.vulkan-utility-libraries
-              pkgs.xorg.libX11
-              pkgs.xorg.libXcursor
-              pkgs.xorg.libXinerama
-              pkgs.xorg.libXrandr
-              pkgs.xorg.libXi
-            ];
-          };
-        });
-
-      apps = forEachSystem ({ pkgs, ... }: {
-        default = {
-          type = "app";
-          program = "${self.packages.${pkgs.system}.default}/bin/RevEngine";
-        };
-      });
     };
 }

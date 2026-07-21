@@ -1,32 +1,22 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include "AssetManager.hpp"
+// For Ctx objects
 #include "physics/GamePhysicsBackend.hpp"
-
-
-// Creator systems
-#include "systems/power_car_systems/PowerCarCreatorSystem.hpp"
-#include "entity_builders/DirectionSphereBuilder.hpp"
-#include "entity_builders/TemplateFloorBuilder.hpp"
+#include "render_backend/RenderBackend.hpp"
 
 // Update systems
-#include "systems/VelocitySystem.hpp"
-#include "systems/TransformToKinematicSyncer.hpp"
-#include "systems/power_car_systems/PowerCarUpdaterSystem.hpp"
 #include "systems/PhysicsComponentUpdater.hpp"
 #include "systems/PhysicsToTransformSyncer.hpp"
-// Render systems
-#include "systems/Render3DSystem.hpp"
+#include "systems/TransformToKinematicSyncer.hpp"
+#include "systems/VelocitySystem.hpp"
 
 // Destroyer systems
 #include "systems/PhysicsComponentDestroyer.hpp"
 
-
 #include <entt/entt.hpp>
-#include <raylib.h>
 #include <iostream>
-
+#include <thread>
 
 namespace RlClone {
 
@@ -35,32 +25,24 @@ class Game {
 protected:
     entt::registry entity_registry;
 
-    //Creator systems
-    RlClone::PowerCarCreatorSystem power_car_creator_system;
-  
     // Update systems
-    RlClone::VelocitySystem velocity_system;  
+    RlClone::VelocitySystem velocity_system;
     RlClone::TransformToKinematicSyncer transform_to_kinematic_syncer;
-    RlClone::PowerCarUpdaterSystem power_car_updater_system;
     RlClone::PhysicsComponentUpdater physics_component_updater;
     RlClone::PhysicsToTransformSyncer physics_to_transform_syncer;
-    // Render systems 
-    RlClone::Render3DSystem render_3d_system;
 
     // Destroyer systems
     RlClone::PhysicsComponentDestroyer physics_component_destroyer;
-  
 public:
-
     /*!
-     * \brief Creates the game object 
-     * * \details 
+     * \brief Creates the game object
+     * * \details
      * Initializes raylib main window
      * Creates systems
-     * Creates game physics backend 
+     * Creates game physics backend
      * Creates asset manager
-     * Creates the ecs Systems 
-     * Creates the main camera 
+     * Creates the ecs Systems
+     * Creates the main camera
      * The game is ran on 60 fps static
      *
      * Important:
@@ -79,7 +61,7 @@ public:
     ~Game();
 
 
-    static const constexpr float delta_time = 1.0f/60.0f;
+    static const constexpr float delta_time = 1.0f / 60.0f;
 
     /*!
      * \brief Runs the game loop
