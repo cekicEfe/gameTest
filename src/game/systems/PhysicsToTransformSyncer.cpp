@@ -10,7 +10,7 @@ RlClone::PhysicsToTransformSyncer::~PhysicsToTransformSyncer() {}
 
 void RlClone::PhysicsToTransformSyncer::Update() {
         // Get physics system backend
-        auto& physics_system_backend = this->entity_registry_ref.get()
+        static auto& physics_system_backend = this->entity_registry_ref.get()
                                         .ctx()
           .get<RlClone::PhysicsBackend::GamePhysicsBackend>();
 

@@ -9,16 +9,15 @@ RlClone::Render3DSystem::~Render3DSystem() {}
 
 void RlClone::Render3DSystem::Render() {
     // We get the asset_manager
-    auto& asset_manager = this->entity_registry_ref.get().ctx().get<RlClone::AssetManager>();
+    static auto& asset_manager = this->entity_registry_ref.get().ctx().get<RlClone::AssetManager>();
 
     // We sort shaders since they are the most costly part of the rendering
     this->entity_registry_ref.get().sort<RlClone::ShaderComponent>(
         [](const RlClone::ShaderComponent& val_l, const RlClone::ShaderComponent& val_r)
         { return val_l.shader_id < val_r.shader_id; });
 
-
     // We first get non animatable models
-    auto view = this->entity_registry_ref.get()
+    auto entity_render_view = this->entity_registry_ref.get()
                     .view<
                         RlClone::TransformComponent,
                         RlClone::ModelComponent,
@@ -26,26 +25,23 @@ void RlClone::Render3DSystem::Render() {
                         RlClone::TextureComponent>(entt::exclude<RlClone::ModelAnimationComponent>);
 
     // We get the entities components
-    for (auto entity_it = view.begin(); entity_it != view.end(); entity_it++) {
-        auto [transform_comp, model_comp, shader_comp, texture_comp] = view.get<
+    for (auto entity_it = entity_render_view.begin(); entity_it != entity_render_view.end(); entity_it++) {
+        auto [transform_comp, model_comp, shader_comp, texture_comp] = entity_render_view.get<
             RlClone::TransformComponent,
             RlClone::ModelComponent,
             RlClone::ShaderComponent,
             RlClone::TextureComponent>(*entity_it);
-
 
         // We only want to change current assets when we stumble accross a new one
         static std::uint32_t current_model_id = UINT32_MAX;
         static std::uint32_t current_shader_id = UINT32_MAX;
         static std::uint32_t current_texture_id = UINT32_MAX;
 
-
         static std::optional<std::reference_wrapper<Model>> current_maybe_model_ref = std::nullopt;
         static std::optional<std::reference_wrapper<Shader>> current_maybe_shader_ref =
             std::nullopt;
         static std::optional<std::reference_wrapper<Texture2D>> current_maybe_texture_ref =
             std::nullopt;
-
 
         if (current_model_id != model_comp.model_id) {
             current_model_id = model_comp.model_id;
@@ -59,7 +55,6 @@ void RlClone::Render3DSystem::Render() {
             current_texture_id = texture_comp.texture_id;
             current_maybe_texture_ref = asset_manager.GetTexture(texture_comp.texture_id);
         }
-
 
         // If the model, texture, shader does not exists in the memory skip
         if (!current_maybe_model_ref.has_value() || !current_maybe_shader_ref.has_value() ||

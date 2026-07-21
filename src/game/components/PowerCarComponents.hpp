@@ -4,14 +4,22 @@
 
 namespace RlClone {
 
-
-inline const std::string POWER_CAR_MODEL "resources/models/power_car/Koenigsegg.obj";
-
-
+  
+inline const std::string POWER_CAR_MODEL ("resources/models/power_car/uploads_files_2792345_Koenigsegg.obj");
+inline const std::string POWER_CAR_MODEL_TEXTURE ("resources/models/power_car/PowerCarTexture.png");
+  
+  
 struct PowerCarComponent {
+
+    float wheel_radius = 0.1f;
+    float wheel_width = 0.05f;
+    float half_vehicle_length = 0.9f;
+    float half_vehicle_width = 0.4f;
+    float half_vehicle_height = 0.3f;
+  
     float initial_roll_angle = 0;
-    float max_roll_angle = DegreesToRadians(60.0f);
-    float max_steering_angle = DegreesToRadians(30.0f);
+    float max_roll_angle = JPH::DegreesToRadians(60.0f);
+    float max_steering_angle = JPH::DegreesToRadians(30.0f);
     int collision_mode = 2;
     bool four_wheel_drive = false;
     bool anti_rollbar = true;
@@ -42,14 +50,6 @@ struct PowerCarComponent {
     //Body* car_body; ///< expected here but it will be in the PhysicsComponent
     JPH::Ref<JPH::VehicleConstraint> vehicle_constraint; ///< The vehicle constraint
     JPH::Ref<JPH::VehicleCollisionTester> testers[3]; ///< Collision testers for the wheel
-    JPH::RMat44 camera_pivot = JPH::RMat44::sIdentity();
-
-    float forward = 0.0f;
-    float previous_forward =
-        1.0f; ///< Keeps track of last car direction so we know when to brake and when to accelerate
-    float right = 0.0f;
-    float brake = 0.0f;
-    float hand_brake = 0.0f;
 };
 
 

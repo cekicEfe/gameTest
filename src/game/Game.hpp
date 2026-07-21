@@ -2,14 +2,26 @@
 #define GAME_HPP
 
 #include "AssetManager.hpp"
-
-#include "entity_builders/DirectionSphereBuilder.hpp"
-
 #include "physics/GamePhysicsBackend.hpp"
-#include "systems/Render3DSystem.hpp"
-#include "systems/TransformToKinematicSyncer.hpp"
-#include "systems/PhysicsToTransformSyncer.hpp"
+
+
+// Creator systems
+#include "systems/power_car_systems/PowerCarCreatorSystem.hpp"
+#include "entity_builders/DirectionSphereBuilder.hpp"
+#include "entity_builders/TemplateFloorBuilder.hpp"
+
+// Update systems
 #include "systems/VelocitySystem.hpp"
+#include "systems/TransformToKinematicSyncer.hpp"
+#include "systems/power_car_systems/PowerCarUpdaterSystem.hpp"
+#include "systems/PhysicsComponentUpdater.hpp"
+#include "systems/PhysicsToTransformSyncer.hpp"
+// Render systems
+#include "systems/Render3DSystem.hpp"
+
+// Destroyer systems
+#include "systems/PhysicsComponentDestroyer.hpp"
+
 
 #include <entt/entt.hpp>
 #include <raylib.h>
@@ -23,10 +35,20 @@ class Game {
 protected:
     entt::registry entity_registry;
 
-    RlClone::Render3DSystem render_3d_system;
+    //Creator systems
+    RlClone::PowerCarCreatorSystem power_car_creator_system;
+  
+    // Update systems
+    RlClone::VelocitySystem velocity_system;  
     RlClone::TransformToKinematicSyncer transform_to_kinematic_syncer;
+    RlClone::PowerCarUpdaterSystem power_car_updater_system;
+    RlClone::PhysicsComponentUpdater physics_component_updater;
     RlClone::PhysicsToTransformSyncer physics_to_transform_syncer;
-    RlClone::VelocitySystem velocity_system;
+    // Render systems 
+    RlClone::Render3DSystem render_3d_system;
+
+    // Destroyer systems
+    RlClone::PhysicsComponentDestroyer physics_component_destroyer;
   
 public:
 
@@ -34,6 +56,7 @@ public:
      * \brief Creates the game object 
      * * \details 
      * Initializes raylib main window
+     * Creates systems
      * Creates game physics backend 
      * Creates asset manager
      * Creates the ecs Systems 
@@ -48,7 +71,7 @@ public:
      *
      */
     Game(
-        const uint AllocatorMaxSize = (1024 * 1024 * 10),
+        const uint AllocatorMaxSize = (10 * 1024 * 1024),
         const uint cMaxBodies = 1024,
         const uint cNumBodyMutexes = 0,
         const uint cMaxBodyPairs = 1024,

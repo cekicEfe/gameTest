@@ -10,7 +10,7 @@ RlClone::TransformToKinematicSyncer::~TransformToKinematicSyncer() {}
 
 void RlClone::TransformToKinematicSyncer::Update(const float delta_time) {
     // Get physics system
-    auto& physics_system_backend =
+    static auto& physics_system_backend =
         this->entity_registry_ref.get().ctx().get<RlClone::PhysicsBackend::GamePhysicsBackend>();
     auto& body_interface = physics_system_backend.GetPhysicsSystem().GetBodyInterface();
 

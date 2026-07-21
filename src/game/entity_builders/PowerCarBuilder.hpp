@@ -14,6 +14,7 @@
 #include "physics/Layers.hpp"
 #include "physics/GamePhysicsBackend.hpp"
 
+#include "AssetManager.hpp"
 #include "components/CoreComponents.hpp"
 #include "components/PowerCarComponents.hpp"
 
@@ -21,10 +22,8 @@
 
 
 namespace RlClone {
-
   
 extern entt::entity PowerCarBuilder(entt::registry &entity_registry);
-
   
 } // namespace RlClone
 

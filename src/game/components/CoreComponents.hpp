@@ -22,7 +22,7 @@ namespace RlClone {
 struct TransformComponent {
     JPH::RVec3 position;
     JPH::Quat rotation = JPH::Quat::sIdentity();
-    JPH::Vec3 scale;
+    JPH::Vec3 scale = JPH::Vec3(1.0f, 1.0f, 1.0f);
 };
 
 
@@ -66,15 +66,14 @@ struct MainCameraComponent {
 };
 
 
-struct ControlComponent {
-    bool forward = false;
-    bool backward = false;
-    bool left = false;
-    bool right = false;
+struct BaseCarControllerComponent {
+    float forward = 0.0f;
+    float previous_forward =
+        1.0f; ///< Keeps track of last car direction so we know when to brake and when to accelerate
+    float right = 0.0f;
+    float brake = 0.0f;
+    float hand_brake = 0.0f;
 };
-
-  
-struct CarTag {};
 
 
 }; // namespace RlClone

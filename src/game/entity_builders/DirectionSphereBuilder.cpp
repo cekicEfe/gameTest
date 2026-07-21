@@ -21,6 +21,7 @@ entt::entity RlClone::DirectionSphereBuilder(
         entity_registry.emplace<RlClone::TextureComponent>(
             direction_sphere,
             *direction_sphere_texture);
+        
         entity_registry.emplace<RlClone::ShaderComponent>(direction_sphere, *base_shader);
         
         return direction_sphere;

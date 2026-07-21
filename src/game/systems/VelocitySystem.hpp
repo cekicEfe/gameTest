@@ -1,13 +1,11 @@
 #ifndef VELOCITY_SYSTEM_HPP
 #define VELOCITY_SYSTEM_HPP
 
-#include <entt/entt.hpp>
-
-#include <functional>
-
 #include "physics/GamePhysicsBackend.hpp"
 #include "components/CoreComponents.hpp"
 
+#include <entt/entt.hpp>
+#include <functional>
 
 namespace RlClone {
 

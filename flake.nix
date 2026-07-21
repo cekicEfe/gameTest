@@ -36,6 +36,8 @@
               SDL2
               spirv-tools
 
+              ogre
+              ogre-next
               raylib
               gdb
               cmake
@@ -60,6 +62,7 @@
               JOLT_REPO
     
               ogre
+              ogre-next    
               recastnavigation
               SDL2
               spirv-tools
@@ -78,7 +81,8 @@
             ];
 
             LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
-              pkgs.ogre 
+              pkgs.ogre
+              pkgs.ogre-next
               pkgs.pkg-config
               pkgs.vulkan-loader
               pkgs.vulkan-tools

@@ -6,5 +6,7 @@ target_sources(RevEngine PRIVATE
     DirectionSphereBuilder.cpp
     DirectionSphereBuilder.hpp
     PowerCarBuilder.cpp
-    PowerCarBuilder.hpp)
+    PowerCarBuilder.hpp
+    TemplateFloorBuilder.cpp
+    TemplateFloorBuilder.hpp)
 

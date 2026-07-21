@@ -1,7 +1,39 @@
 #include "AssetManager.hpp"
 
+const std::string RlClone::AssetManager::DEFAULT_CUBE_MODEL =
+    "resources/default_assets/default_models/default_cube/DefaultCube.obj";
+const std::string RlClone::AssetManager::DEFAULT_CUBE_TEXTURE =
+    "resources/default_assets/default_models/default_cube/DefaultCubeTexture.png";
 
-RlClone::AssetManager::AssetManager() {}
+const std::string RlClone::AssetManager::DEFAULT_SPHERE_MODEL =
+    "resources/default_assets/default_models/default_sphere/DefaultSphere.obj";
+const std::string RlClone::AssetManager::DEFAULT_SPHERE_TEXTURE =
+    "resources/default_assets/default_models/default_sphere/DefaultSphereTexture.png";
+
+const std::string RlClone::AssetManager::DEFAULT_TEXTURE =
+    "resources/default_assets/default_models/DefaultTexture.png";
+const std::string RlClone::AssetManager::DEFAULT_VERT_SHADER =
+    "resources/default_assets/default_shader/DefaultShader.vert";
+const std::string RlClone::AssetManager::DEFAULT_FRAG_SHADER =
+    "resources/default_assets/default_shader/DefaultShader.frag";
+
+
+RlClone::AssetManager::AssetManager() {
+    try {
+        *this->PutModel(RlClone::AssetManager::DEFAULT_CUBE_MODEL);
+        *this->PutTexture(RlClone::AssetManager::DEFAULT_CUBE_TEXTURE);
+
+        *this->PutModel(RlClone::AssetManager::DEFAULT_SPHERE_MODEL);
+        *this->PutTexture(RlClone::AssetManager::DEFAULT_SPHERE_TEXTURE);
+
+        *this->PutTexture(RlClone::AssetManager::DEFAULT_TEXTURE);
+        *this->PutShader(
+            RlClone::AssetManager::DEFAULT_VERT_SHADER,
+            RlClone::AssetManager::DEFAULT_FRAG_SHADER);
+    } catch (...) {
+        throw std::runtime_error("[ERROR]: Could not initialize all of the default assets");
+    }
+}
 
 
 RlClone::AssetManager::~AssetManager() {
@@ -55,6 +87,18 @@ RlClone::AssetManager::GetModel(std::uint32_t model_id) {
 }
 
 
+std::optional<std::reference_wrapper<Model>>
+RlClone::AssetManager::GetModel(const std::string asset_name) {
+    std::uint32_t model_id = entt::hashed_string(asset_name.data()).value();
+    if (auto iterator = this->models.find(model_id); iterator != this->models.end()) {
+        return std::ref(iterator->second);
+    }
+    else {
+        return std::nullopt;
+    }
+}
+
+
 void RlClone::AssetManager::DeleteModel(std::uint32_t model_id) {
     if (auto iterator = this->models.find(model_id); iterator != this->models.end()) {
         UnloadModel(
@@ -92,6 +136,18 @@ std::optional<std::uint32_t> RlClone::AssetManager::PutTexture(const std::string
 
 std::optional<std::reference_wrapper<Texture2D>>
 RlClone::AssetManager::GetTexture(std::uint32_t texture_id) {
+    if (auto iterator = this->textures.find(texture_id); iterator != this->textures.end()) {
+        return std::ref(iterator->second);
+    }
+    else {
+        return std::nullopt;
+    }
+}
+
+
+std::optional<std::reference_wrapper<Texture2D>>
+RlClone::AssetManager::GetTexture(const std::string asset_name) {
+    std::uint32_t texture_id = entt::hashed_string(asset_name.data()).value();
     if (auto iterator = this->textures.find(texture_id); iterator != this->textures.end()) {
         return std::ref(iterator->second);
     }
@@ -148,6 +204,19 @@ RlClone::AssetManager::GetModelAnimation(std::uint32_t model_animation_id) {
 }
 
 
+std::optional<std::reference_wrapper<std::pair<ModelAnimation*, RlClone::ModelAnimationCount>>>
+RlClone::AssetManager::GetModelAnimation(const std::string asset_name) {
+    std::uint32_t model_animation_id = entt::hashed_string(asset_name.data()).value();
+    if (auto iterator = this->animations.find(model_animation_id);
+        iterator != this->animations.end()) {
+        return std::ref(iterator->second);
+    }
+    else {
+        return std::nullopt;
+    }
+}
+
+
 void RlClone::AssetManager::DeleteModelAnimation(std::uint32_t model_animation_id) {
     if (auto iterator = this->animations.find(model_animation_id);
         iterator != this->animations.end()) {
@@ -165,7 +234,7 @@ std::optional<std::uint32_t> RlClone::AssetManager::PutShader(
     const std::string vert_shader_name, const std::string frag_shader_name) {
     try {
         auto string_hash =
-            entt::hashed_string((frag_shader_name + vert_shader_name).data()).value();
+            entt::hashed_string((vert_shader_name + frag_shader_name).data()).value();
 
         if (this->shaders.find(string_hash) != this->shaders.end()) {
             // We already have the asset
@@ -173,8 +242,12 @@ std::optional<std::uint32_t> RlClone::AssetManager::PutShader(
         }
         else {
             Shader shader = LoadShader(
-                (vert_shader_name == "" ? 0 : vert_shader_name.data()),
-                (frag_shader_name == "" ? 0 : frag_shader_name.data()));
+                (vert_shader_name == RlClone::AssetManager::DEFAULT_VERT_SHADER
+                     ? RlClone::AssetManager::DEFAULT_VERT_SHADER.data()
+                     : vert_shader_name.data()),
+                (frag_shader_name == RlClone::AssetManager::DEFAULT_FRAG_SHADER
+                     ? RlClone::AssetManager::DEFAULT_FRAG_SHADER.data()
+                     : frag_shader_name.data()));
 
             this->shaders[string_hash] = std::move(shader);
             return string_hash;

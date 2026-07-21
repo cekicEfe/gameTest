@@ -10,12 +10,12 @@ RlClone::VelocitySystem::~VelocitySystem() {}
 
 void RlClone::VelocitySystem::Update(const float delta_time) {
     // We are sure that RlClone::PhysicsBackend::GamePhysicsBackend always exists
-    auto& physics_system_backend =
+    static auto& physics_system_backend =
         this->entity_registry_ref.get().ctx().get<RlClone::PhysicsBackend::GamePhysicsBackend>();
     // Lock physics system
     auto& body_interface = physics_system_backend.GetPhysicsSystem().GetBodyInterface();
 
-
+    
     // Update the entities without physics component
     // Get the entities that does not have physics component
     auto non_physicals_view = this->entity_registry_ref.get()
