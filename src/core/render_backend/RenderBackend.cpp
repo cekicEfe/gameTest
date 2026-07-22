@@ -1,21 +1,96 @@
 #include "render_backend/RenderBackend.hpp"
 
 
-RlClone::RenderBackend::RenderBackend() : ctx("testicles") {
+bool RlClone::InputHandler::keyPressed(const OgreBites::KeyboardEvent& evt) {
+    active_keys.insert(evt.keysym.sym);
+    return true;
+}
+
+
+bool RlClone::InputHandler::keyReleased(const OgreBites::KeyboardEvent& evt) {
+    active_keys.erase(evt.keysym.sym);
+    return true;
+}
+
+
+bool RlClone::InputHandler::mouseMoved(const OgreBites::MouseMotionEvent& evt) {
+    // Save current mouse X and Y coordinates
+    last_x = evt.x;
+    last_y = evt.y;
+    return true;
+}
+
+
+bool RlClone::InputHandler::mousePressed(const OgreBites::MouseButtonEvent& evt) {
+    if (evt.button == OgreBites::BUTTON_LEFT) {
+        left_button_pressed = true;
+    }
+    if (evt.button == OgreBites::BUTTON_RIGHT) {
+        right_button_pressed = true;
+    }
+    return true;
+}
+
+
+bool RlClone::InputHandler::mouseReleased(const OgreBites::MouseButtonEvent& evt) {
+    if (evt.button == OgreBites::BUTTON_LEFT) {
+        left_button_pressed = false;
+    }
+    if (evt.button == OgreBites::BUTTON_RIGHT) {
+        right_button_pressed = false;
+    }
+    return true;
+}
+
+
+bool RlClone::InputHandler::mouseWheelRolled(const OgreBites::MouseWheelEvent& evt) {
+    // Read scroll data from the event structure
+    scroll_y = evt.y; // Positive = Scroll Up, Negative = Scroll Down
+    // Return true if you have consumed the event, false to pass it down the chain
+    return true;
+}
+
+
+bool RlClone::InputHandler::IsKeyPressed(OgreBites::Keycode key) const {
+    return active_keys.find(key) != active_keys.end();
+}
+
+
+int RlClone::InputHandler::GetMouseLastX() const {
+    return last_x;
+}
+
+
+int RlClone::InputHandler::GetMouseLastY() const {
+    return last_y;
+}
+
+
+int RlClone::InputHandler::GetMouseLastScroll() const {
+    return scroll_y;
+}
+
+
+bool RlClone::InputHandler::IsMouseLeftButtonPressed() const {
+    return left_button_pressed;
+}
+
+
+bool RlClone::InputHandler::IsMouseRightButtonPressed() const {
+    return right_button_pressed;
+}
+
+
+RlClone::RenderBackend::RenderBackend() : ctx("RenderBackend") {
     this->ctx.initApp();
+
     Ogre::Root* root = ctx.getRoot();
-    // root->loadPlugin("Codec_Assimp");
     Ogre::SceneManager* scnMgr = root->createSceneManager();
+    scnMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
     // register our scene with the RTSS
     Ogre::RTShader::ShaderGenerator* shadergen = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
     shadergen->addSceneManager(scnMgr);
-
-    // without light we would just get a black screen
-    Ogre::Light* light = scnMgr->createLight("MainLight");
-    Ogre::SceneNode* lightNode = scnMgr->getRootSceneNode()->createChildSceneNode();
-    lightNode->setPosition(0, 10, 15);
-    lightNode->attachObject(light);
 
     // also need to tell where we are
     Ogre::SceneNode* camNode = scnMgr->getRootSceneNode()->createChildSceneNode();
@@ -30,24 +105,10 @@ RlClone::RenderBackend::RenderBackend() : ctx("testicles") {
 
     // and tell it to render into the main window
     ctx.getRenderWindow()->addViewport(cam);
-
-    // finally something to render
-    Ogre::Entity* ent = scnMgr->createEntity("HelloCube.obj");
-    Ogre::SceneNode* node = scnMgr->getRootSceneNode()->createChildSceneNode();
-    node->attachObject(ent);
-
     ctx.addInputListener(&key_handler);
 }
 
 
 RlClone::RenderBackend::~RenderBackend() {
     this->ctx.closeApp();
-}
-
-
-bool RlClone::KeyHandler::keyPressed(const OgreBites::KeyboardEvent& evt) {
-    if (evt.keysym.sym == OgreBites::SDLK_ESCAPE) {
-        Ogre::Root::getSingleton().queueEndRendering();
-    }
-    return true;
 }
