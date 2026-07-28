@@ -40,13 +40,14 @@
 
             C_COMPILER = "${pkgs.gcc}/bin/gcc";
             CXX_COMPILER = "${pkgs.gcc}/bin/g++";
-
+    
             JOLT_REPO = JOLT_REPO;
 
             nativeBuildInputs = with pkgs; [
               SDL2
               spirv-tools
-
+              boost
+    
               ogre-with-assimp
               raylib
               gdb
@@ -88,10 +89,9 @@
               xorg.libXi
             ];
 
-            LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
-
+            LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [    
               ogre-with-assimp
-
+              pkgs.boost    
               pkgs.pkg-config
               pkgs.vulkan-loader
               pkgs.vulkan-tools

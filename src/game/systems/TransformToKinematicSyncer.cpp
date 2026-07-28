@@ -10,8 +10,9 @@ RlClone::TransformToKinematicSyncer::~TransformToKinematicSyncer() {}
 
 void RlClone::TransformToKinematicSyncer::Update(const float delta_time) {
     // Get physics system
-    static auto& physics_system_backend =
+    auto& physics_system_backend =
         this->entity_registry_ref.get().ctx().get<RlClone::PhysicsBackend::GamePhysicsBackend>();
+    
     auto& body_interface = physics_system_backend.GetPhysicsSystem().GetBodyInterface();
 
     // We only get the entites with transform and physics body
@@ -25,7 +26,7 @@ void RlClone::TransformToKinematicSyncer::Update(const float delta_time) {
         auto& physics = view.get<RlClone::PhysicsComponent>(entity);
 
         if (body_interface.IsAdded(physics.body_id)) {
-            body_interface
+          body_interface // Also activates bodies
                 .MoveKinematic(physics.body_id, transform.position, transform.rotation, delta_time);
         }
     }

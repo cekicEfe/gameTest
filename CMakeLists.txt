@@ -18,8 +18,18 @@ add_subdirectory($ENV{JOLT_REPO}/Build include/)
 target_compile_options(Jolt PRIVATE
     -Wno-array-bounds
 )
+
+find_package(Threads REQUIRED)
+find_package(Boost REQUIRED)    
 find_package(OGRE REQUIRED COMPONENTS Bites CONFIG)
-set(RevEngineDependencies Jolt glfw raylib OgreBites)
+    
+set(RevEngineDependencies
+    Jolt
+    glfw
+    OgreBites
+    Boost::boost
+    Threads::Threads
+)
 
 add_executable(RevEngine)
 
@@ -135,5 +145,18 @@ add_custom_command(TARGET RevEngine POST_BUILD
     COMMENT "reveng: staging plugins.cfg / resources.cfg next to RevEngine"
 )
 
+find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
+
+if(CLANG_TIDY_EXE)
+    # Enable all checks and treat warnings as errors to force build failure
+    set(CMAKE_CXX_CLANG_TIDY 
+        ${CLANG_TIDY_EXE}
+        "-checks=-*,bugprone-*,cert-*,cppcoreguidelines-*,modernize-*,performance-*,readability-*"
+        "-warnings-as-errors=*"
+    )
+else()
+    message(WARNING "clang-tidy executable was not found!")
+endif()    
+    
 install(TARGETS RevEngine DESTINATION bin)
 install(FILES "${_plugins_cfg_path}" "${_resources_cfg_path}" DESTINATION bin)

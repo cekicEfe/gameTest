@@ -4,6 +4,7 @@
 #include <OGRE/Bites/OgreApplicationContext.h>
 #include <OGRE/Bites/OgreCameraMan.h>
 #include <OGRE/Bites/OgreInput.h>
+#include <OGRE/OgreViewport.h>
 #include <OGRE/Ogre.h>
 #include <OgreRTShaderSystem.h>
 
@@ -49,6 +50,8 @@ public:
 
     OgreBites::ApplicationContext ctx;
     RlClone::InputHandler key_handler;
+    Ogre::SceneManager* main_scene_manager;
+    Ogre::Viewport* main_viewport;
 };
 
 

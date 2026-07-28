@@ -85,26 +85,21 @@ RlClone::RenderBackend::RenderBackend() : ctx("RenderBackend") {
     this->ctx.initApp();
 
     Ogre::Root* root = ctx.getRoot();
-    Ogre::SceneManager* scnMgr = root->createSceneManager();
-    scnMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
+    main_scene_manager = root->createSceneManager();
+    main_scene_manager->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
     // register our scene with the RTSS
     Ogre::RTShader::ShaderGenerator* shadergen = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
-    shadergen->addSceneManager(scnMgr);
-
-    // also need to tell where we are
-    Ogre::SceneNode* camNode = scnMgr->getRootSceneNode()->createChildSceneNode();
-    camNode->setPosition(0, 0, 15);
-    camNode->lookAt(Ogre::Vector3(0, 0, -1), Ogre::Node::TS_PARENT);
-
-    // create the camera
-    Ogre::Camera* cam = scnMgr->createCamera("MainCamera");
-    cam->setNearClipDistance(5); // specific to this sample
-    cam->setAutoAspectRatio(true);
-    camNode->attachObject(cam);
+    shadergen->addSceneManager(main_scene_manager);
 
     // and tell it to render into the main window
-    ctx.getRenderWindow()->addViewport(cam);
+    ctx.getRenderWindow()->addViewport(nullptr, 0);
+    
+    Ogre::ColourValue fadeColour(0.9, 0.9, 0.9);
+    this->main_viewport = ctx.getRenderWindow()->getViewport(0);
+    this->main_viewport->setBackgroundColour(fadeColour);
+    main_scene_manager->setFog(Ogre::FOG_LINEAR, fadeColour, 0, 600, 900);
+    
     ctx.addInputListener(&key_handler);
 }
 

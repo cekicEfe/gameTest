@@ -5,8 +5,8 @@
 #include "physics/GamePhysicsBackend.hpp"
 
 #include <entt/entt.hpp>
-
 #include <functional>
+#include <vector>
 
 namespace RlClone {
 
@@ -15,7 +15,15 @@ public:
     PhysicsComponentDestroyer(entt::registry& entity_registry_ref);
     ~PhysicsComponentDestroyer();
 
-    void Destroy();
+    void DestroyAll();
+
+    /*!
+     * \brief Dont use this for big batches its slow
+     */
+    void Destroy(entt::entity entity);
+
+    void DestroyBatch(std::vector<entt::entity> entities);
+  
 private:
     std::reference_wrapper<entt::registry> entity_registry_ref;
 };

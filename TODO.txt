@@ -1,1 +1,6 @@
-Do the demo for the love of sweet god
+
+Do the component destruction system
+
+Finish the synchronizer
+Finish the component destruction system
+Finish tighten the checks at systems -> look at CoreComponents             

@@ -1,6 +1,12 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
+// For utils
+#include "utils/BaseCameraUtils.hpp"
+
+// For important entity builders
+#include "entity_builders/BaseCameraBuilder.hpp"
+
 // For Ctx objects
 #include "physics/GamePhysicsBackend.hpp"
 #include "render_backend/RenderBackend.hpp"
@@ -16,13 +22,12 @@
 
 #include <entt/entt.hpp>
 #include <iostream>
-#include <thread>
 
 namespace RlClone {
 
 
 class Game {
-protected:
+private:
     entt::registry entity_registry;
 
     // Update systems
@@ -33,24 +38,12 @@ protected:
 
     // Destroyer systems
     RlClone::PhysicsComponentDestroyer physics_component_destroyer;
+
+    bool is_running = true;
 public:
     /*!
      * \brief Creates the game object
      * * \details
-     * Initializes raylib main window
-     * Creates systems
-     * Creates game physics backend
-     * Creates asset manager
-     * Creates the ecs Systems
-     * Creates the main camera
-     * The game is ran on 60 fps static
-     *
-     * Important:
-     * physicsbackend,
-     * asset manager,
-     * main camera,
-     * will exist during programs lifetime.
-     *
      */
     Game(
         const uint AllocatorMaxSize = (10 * 1024 * 1024),
@@ -69,9 +62,6 @@ public:
      * 1. Polls events
      * 2. Updates objects
      * 3. Renders renderables entities
-     * 3.1 Renders 2d objects
-     * 3.2 Renders 3d objects
-     *
      */
     void Run();
 };
