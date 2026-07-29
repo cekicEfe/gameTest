@@ -1,7 +1,7 @@
 #include "SceneTransformSyncer.hpp"
 
 
-void RlClone::SyncSceneTransforms(entt::registry& entity_registry) {
+void RlClone::SyncSceneNodeTransforms(entt::registry& entity_registry) {
     auto view = entity_registry.view<RlClone::TransformComponent, RlClone::SceneComponent>();
 
     for (auto entity : view) {

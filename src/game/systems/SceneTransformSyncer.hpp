@@ -10,7 +10,7 @@
 namespace RlClone {
 
   
-extern void SyncSceneTransforms(entt::registry &entity_registry);
+extern void SyncSceneNodeTransforms(entt::registry &entity_registry);
 
   
 }
